@@ -72,7 +72,11 @@ export default function MilkSelection({
             key={milk.id}
             type="button"
             variant={milk.color as "default"}
-            className="rounded-full sm:text-base md:text-lg"
+            className={`rounded-full sm:text-base md:text-lg ${
+              selectedMilk?.id === milk.id
+                ? "border-2 outline outline-white border-black"
+                : ""
+            }`}
             disabled={isDisabled}
             onClick={() => {
               setSelectedMilk(milk);

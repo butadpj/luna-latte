@@ -71,10 +71,15 @@ export default function DrinkSelection({
       <div className="selection mt-5 pl-5 flex flex-col gap-6 items-start">
         {drinkSelections.map((drink) => (
           <Button
+            id={`drink-${drink.id}`}
             key={drink.id}
             type="button"
             variant={drink.color as "default"}
-            className="rounded-full sm:text-base md:text-lg"
+            className={`rounded-full sm:text-base md:text-lg ${
+              selectedDrink?.id === drink.id
+                ? "border-2 outline outline-white border-black"
+                : ""
+            }`}
             onClick={() => {
               setSelectedDrink(drink);
             }}

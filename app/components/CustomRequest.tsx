@@ -32,7 +32,7 @@ const customRequests = [
   },
   {
     id: 5,
-    message: "All good!",
+    message: "Nothing, I'm good!",
     color: "green",
   },
 ];
@@ -91,7 +91,11 @@ export default function CustomRequest({
             key={request.id}
             type="button"
             variant={request.color as "default"}
-            className="rounded-full sm:text-base md:text-lg"
+            className={`rounded-full sm:text-base md:text-lg ${
+              selectedRequest?.id === request.id
+                ? "border-2 outline outline-white border-black"
+                : ""
+            }`}
             disabled={isDisabled}
             onClick={() => {
               setSelectedRequest(request);
