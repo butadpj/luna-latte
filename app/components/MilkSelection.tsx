@@ -52,7 +52,7 @@ export default function MilkSelection({
             size={"icon"}
             onClick={() => setSelectedMilk(null)}
           >
-            <XIcon />
+            <XIcon className="text-neutral-400" />
           </Button>
         ) : null}
 

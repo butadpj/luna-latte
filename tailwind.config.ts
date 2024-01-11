@@ -6,7 +6,13 @@ module.exports = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  safelist: ["fill-green", "fill-orange"],
+  safelist: [
+    "fill-green",
+    "fill-orange",
+    "fill-dark",
+    "fill-dark-brown",
+    "fill-light",
+  ],
   prefix: "",
   theme: {
     container: {

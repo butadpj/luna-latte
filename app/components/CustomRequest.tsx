@@ -2,7 +2,6 @@
 
 import { Button } from "@/shared_components/ui/button";
 import { GrabIcon, XIcon } from "lucide-react";
-import { useState } from "react";
 
 export interface CustomRequestProps {
   id: number;
@@ -31,6 +30,11 @@ const customRequests = [
     message: "I want stronger coffee!",
     color: "dark-brown",
   },
+  {
+    id: 5,
+    message: "All good!",
+    color: "green",
+  },
 ];
 
 export default function CustomRequest({
@@ -51,7 +55,7 @@ export default function CustomRequest({
             isDisabled ? "text-neutral-400" : ""
           }`}
         >
-          <GrabIcon /> Make it yours:
+          <GrabIcon /> Any request?:
         </label>
         <p
           className={`font-bold ${
@@ -68,7 +72,7 @@ export default function CustomRequest({
             size={"icon"}
             onClick={() => setSelectedRequest(null)}
           >
-            <XIcon />
+            <XIcon className="text-neutral-400" />
           </Button>
         ) : null}
         <input
