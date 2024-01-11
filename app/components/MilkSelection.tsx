@@ -39,7 +39,7 @@ export default function MilkSelection({
         </label>
         <p
           className={`font-bold ${
-            selectedMilk ? "underline decoration-dashed" : ""
+            selectedMilk ? "underline underline-offset-4 decoration-dashed" : ""
           }`}
         >
           {selectedMilk?.name || "_ _ _ _ _"}

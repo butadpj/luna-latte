@@ -59,7 +59,9 @@ export default function CustomRequest({
         </label>
         <p
           className={`font-bold ${
-            selectedRequest ? "underline decoration-dashed" : ""
+            selectedRequest
+              ? "underline underline-offset-4 decoration-dashed"
+              : ""
           }`}
         >
           {selectedRequest?.message || "_ _ _ _ _"}

@@ -8,6 +8,7 @@ export interface DrinkProps {
   name: string;
   milk: string;
   custom_request: string;
+  price: number;
 }
 
 export interface DrinkSelectionProps {
@@ -34,7 +35,7 @@ const drinkSelections = [
   },
   {
     id: 4,
-    name: "Dark-mocha latte",
+    name: "Hazelnut latte",
     color: "dark-brown",
   },
 ];
@@ -54,7 +55,9 @@ export default function DrinkSelection({
         </label>
         <p
           className={`font-bold ${
-            selectedDrink ? "underline decoration-dashed" : ""
+            selectedDrink
+              ? "underline underline-offset-4 decoration-dashed"
+              : ""
           }`}
         >
           {selectedDrink?.name || "_ _ _ _ _"}
