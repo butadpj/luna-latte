@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import logoDark from "@/assets/logos/dark.svg";
 import logoLight from "@/assets/logos/light.svg";
-import Customization from "./components/Customization";
+import Customization from "../components/Customization";
 
 const LOGO_SIZE = 150;
 
