@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import logoDark from "@/assets/logos/dark.svg";
 import logoLight from "@/assets/logos/light.svg";
+import CartItems from "./components/CartItems";
 
 const LOGO_SIZE = 150;
 
@@ -23,10 +24,8 @@ export default function OrderSummary() {
         height={LOGO_SIZE}
       />
 
-      <div className="w-full flex flex-col items-start px-5">
-        <h2 className="text-xl md:text-2xl mb-5 py-5">
-          Your order(s) summary:
-        </h2>
+      <div className="w-full flex flex-col items-center px-5">
+        <CartItems />
       </div>
     </main>
   );

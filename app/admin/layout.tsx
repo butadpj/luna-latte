@@ -5,7 +5,7 @@ import icon from "@/assets/icon.png";
 import { redirect } from "next/navigation";
 import { ReactElement } from "react";
 import MainNav from "./components/MainNav";
-import { Tabs } from "@/shared_components/ui/tabs";
+import { Tabs } from "@/shared/ui/tabs";
 
 import { Inter } from "next/font/google";
 

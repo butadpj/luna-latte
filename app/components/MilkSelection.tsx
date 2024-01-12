@@ -1,17 +1,17 @@
 "use client";
 
-import { Button } from "@/shared_components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { MilkIcon, XIcon } from "lucide-react";
 
 export interface MilkSelectionProps {
-  id: number;
+  id: string;
   name: string;
   color: string;
 }
 
 const milkSelections = [
   {
-    id: 1,
+    id: "regular",
     name: "Regular",
     color: "light",
   },

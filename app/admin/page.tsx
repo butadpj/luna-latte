@@ -6,11 +6,11 @@ import {
   CardContent,
   CardTitle,
   CardDescription,
-} from "@/shared_components/ui/card";
+} from "@/shared/ui/card";
 import Chart from "./components/Chart";
 import RecentSales from "./components/RecentSales";
 import { DollarSignIcon, ShoppingBagIcon } from "lucide-react";
-import { TabsContent } from "@/shared_components/ui/tabs";
+import { TabsContent } from "@/shared/ui/tabs";
 
 export default function AdminOverview() {
   return (

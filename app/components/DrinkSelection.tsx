@@ -1,40 +1,40 @@
 "use client";
 
-import { Button } from "@/shared_components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { CupSodaIcon } from "lucide-react";
 
 export interface DrinkProps {
   id: string;
   name: string;
+  color: string;
   milk: string;
   custom_request: string;
   price: number;
 }
 
-export interface DrinkSelectionProps {
-  id: number;
-  name: string;
-  color: string;
-}
+export type DrinkSelectionProps = Omit<
+  DrinkProps,
+  "milk" | "custom_request" | "price"
+>;
 
 const drinkSelections = [
   {
-    id: 1,
+    id: "iced-americano",
     name: "Iced americano",
     color: "dark",
   },
   {
-    id: 2,
+    id: "spanish-latte",
     name: "Spanish latte",
     color: "orange",
   },
   {
-    id: 3,
+    id: "matcha-latte",
     name: "Matcha latte",
     color: "green",
   },
   {
-    id: 4,
+    id: "hazelnut-latte",
     name: "Hazelnut latte",
     color: "dark-brown",
   },

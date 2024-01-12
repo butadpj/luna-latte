@@ -1,4 +1,4 @@
-import { TabsContent } from "@/shared_components/ui/tabs";
+import { TabsContent } from "@/shared/ui/tabs";
 // import { getAllUsers } from "@utils/users";
 // import { DataTable as UsersTable } from "(pages)/admin/components/ui/data-table";
 // import { columns } from "./components/Columns";

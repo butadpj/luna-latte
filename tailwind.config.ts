@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./pages/**/*.{ts,tsx}",
-    "./shared_components/**/*.{ts,tsx}",
+    "./shared/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],

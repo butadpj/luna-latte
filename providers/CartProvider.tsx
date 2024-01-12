@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ReactElement,
   createContext,
@@ -12,12 +14,16 @@ type Modify<T, R> = Omit<T, keyof R> & R;
 
 export interface CartItemProps extends DrinkProps {
   quantity: number;
+  size: string;
 }
 
 interface CartItemUpdateProps
   extends Modify<
     Omit<CartItemProps, "id">,
     {
+      color?: string;
+      price?: number;
+      size?: string;
       name?: string;
       milk?: string;
       custom_request?: string;
@@ -44,7 +50,7 @@ interface ContextType {
     itemId: string,
     propertiesToUpdate: CartItemUpdateProps
   ) => void;
-  getProductById: (itemId: string) => CartItemProps | undefined;
+  getCartItemById: (itemId: string) => CartItemProps | undefined;
   removeAllCartItems: () => void;
   removeCartItemById: (itemId: string) => void;
 }
@@ -77,7 +83,7 @@ export default function CartProvider({ children }: { children: ReactElement }) {
     setCart((cart) => ({ ...cart, cartItems: [] }));
   };
 
-  const getProductById = (itemId: string) =>
+  const getCartItemById = (itemId: string) =>
     computedCart.cartItems.find((item) => item.id === itemId);
 
   const addToCart = (newItem: CartItemProps) => {
@@ -146,7 +152,7 @@ export default function CartProvider({ children }: { children: ReactElement }) {
         cart: computedCart,
         addToCart,
         updateCartItem,
-        getProductById,
+        getCartItemById,
         removeAllCartItems,
         removeCartItemById,
       }}

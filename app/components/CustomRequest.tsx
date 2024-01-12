@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/shared_components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { GrabIcon, XIcon } from "lucide-react";
 
 export interface CustomRequestProps {
