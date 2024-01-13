@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import icon from "@/assets/icon.png";
 import { redirect } from "next/navigation";
-import { ReactElement } from "react";
 import MainNav from "./components/MainNav";
 import { Tabs } from "@/shared/ui/tabs";
 
@@ -20,7 +19,7 @@ export async function generateMetadata() {
 export default async function AdminLayout({
   children,
 }: {
-  children: ReactElement;
+  children: JSX.Element | JSX.Element[];
 }) {
   // const user = await getCurrentUser();
 

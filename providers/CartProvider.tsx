@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ReactElement,
-  createContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@/lib/utils";
 import { DrinkProps } from "@/app/components/DrinkSelection";
 
@@ -57,7 +51,11 @@ interface ContextType {
 
 export const CartContext = createContext<ContextType>({} as ContextType);
 
-export default function CartProvider({ children }: { children: ReactElement }) {
+export default function CartProvider({
+  children,
+}: {
+  children: JSX.Element | JSX.Element[];
+}) {
   const [cart, setCart] = useState<CartProps>({
     status: "LOADING",
     cartItems: [],
