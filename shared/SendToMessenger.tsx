@@ -6,7 +6,7 @@ export default function SendToMessenger() {
       messenger_app_id="2084388195253551"
       page_id="155078761029891"
       // ref="<PASS_THROUGH_PARAM>"
-      color="white"
+      color="blue"
       size="large"
     ></div>
   );
