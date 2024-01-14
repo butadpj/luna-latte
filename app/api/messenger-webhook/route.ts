@@ -3,10 +3,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
+  const searchParams = req.nextUrl.searchParams;
+
   // Parse the query params
-  let mode = req.query["hub.mode"];
-  let token = req.query["hub.verify_token"];
-  let challenge = req.query["hub.challenge"];
+  let mode = searchParams.get("hub.mode");
+  let token = searchParams.get("hub.verify_token");
+  let challenge = searchParams.get("hub.challenge");
 
   // Check if a token and mode is in the query string of the request
   if (mode && token) {
