@@ -63,6 +63,13 @@ export default function RootLayout({
             crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js"
           ></Script>
+          <Script>
+            {`FB.Event.subscribe('send_to_messenger', function(e){" "}
+            {
+              // callback for events triggered by the plugin
+            }
+            );`}
+          </Script>
         </body>
       </html>
     </ClerkProvider>
