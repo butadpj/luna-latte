@@ -27,6 +27,7 @@ import { useState } from "react";
 import { Label } from "@/shared/ui/label";
 import cities from "@/lib/cities";
 import { useUser } from "@clerk/nextjs";
+import SendToMessenger from "@/shared/SendToMessenger";
 
 export default function OrderForm() {
   const { user } = useUser();
@@ -283,7 +284,7 @@ export default function OrderForm() {
           )}
         />
         <Button type="submit" size={"lg"}>
-          Submit
+          <SendToMessenger />
         </Button>
       </form>
     </Form>

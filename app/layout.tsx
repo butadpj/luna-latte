@@ -42,6 +42,7 @@ export default function RootLayout({
           <Script>
             {`window.fbAsyncInit = function() {
         FB.init({
+          appId            : '2084388195253551',
           xfbml            : true,
           version          : 'v18.0'
         });
@@ -55,6 +56,12 @@ export default function RootLayout({
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));`}
           </Script>
+          <Script
+            async
+            defer
+            crossOrigin="anonymous"
+            src="https://connect.facebook.net/en_US/sdk.js"
+          ></Script>
         </body>
       </html>
     </ClerkProvider>
