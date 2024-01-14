@@ -167,7 +167,7 @@ export default function OrderForm() {
         {selectedClaimMethod === "delivery" ? (
           <div className="flex flex-col items-start">
             <Label className="mb-2">Address</Label>
-            <div className="fields space-y-2">
+            <div className="fields w-full space-y-2">
               <FormField
                 control={form.control}
                 name={"address.street"}
@@ -179,7 +179,7 @@ export default function OrderForm() {
                     <FormControl>
                       <Input placeholder="Sampaguita St." {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -194,7 +194,7 @@ export default function OrderForm() {
                     <FormControl>
                       <Input placeholder="Bagong Nayon" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -226,7 +226,7 @@ export default function OrderForm() {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -282,7 +282,9 @@ export default function OrderForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" size={"lg"}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
