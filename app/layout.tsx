@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import CartProvider from "@/providers/CartProvider";
 import { Toaster } from "@/shared/ui/toaster";
 import Script from "next/script";
+import MessengerChatPlugin from "./MessengerChatPlugin";
 
 const sono = Sono({ subsets: ["latin"] });
 
@@ -23,54 +24,24 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <CartProvider>{children}</CartProvider>
-          <Toaster />
-
-          {/* <!-- Messenger Chat Plugin Code --> */}
-          <div id="fb-root"></div>
-
-          {/* <!-- Your Chat Plugin code --> */}
-          <div id="fb-customer-chat" className="fb-customerchat"></div>
-
-          <Script>
-            {`var chatbox = document.getElementById('fb-customer-chat');
-      chatbox.setAttribute("page_id", "155078761029891");
-      chatbox.setAttribute("attribution", "biz_inbox");`}
-          </Script>
-
-          {/* <!-- Your SDK code --> */}
-          <Script>
-            {`window.fbAsyncInit = function() {
-        FB.init({
-          appId            : '2084388195253551',
-          xfbml            : true,
-          version          : 'v18.0'
-        });
-      };
-
-       (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-
-      `}
-          </Script>
           <Script
             async
             defer
             crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js"
           ></Script>
-          <Script>
-            {`FB.Event.subscribe('send_to_messenger', function(e){" "}
-            {
-              // callback for events triggered by the plugin
-            }
-            );`}
-          </Script>
+
+          <CartProvider>{children}</CartProvider>
+          <Toaster />
+          <MessengerChatPlugin />
+          <div
+            className="fb-send-to-messenger"
+            messenger_app_id="2084388195253551"
+            page_id="155078761029891"
+            // ref="<PASS_THROUGH_PARAM>"
+            // color="<blue | white>"
+            // size="<standard | large | xlarge>"
+          ></div>
         </body>
       </html>
     </ClerkProvider>
