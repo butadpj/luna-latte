@@ -15,11 +15,17 @@ export async function GET(req: NextRequest, res: NextResponse) {
     // Check the mode and token sent is correct
     if (mode === "subscribe" && token === "sample") {
       // Respond with the challenge token from the request
+
       console.log("WEBHOOK_VERIFIED");
-      res.status(200).send(challenge);
+      return new Response(challenge, {
+        status: 200,
+      });
     } else {
       // Respond with '403 Forbidden' if verify tokens do not match
-      res.sendStatus(403);
+
+      return new Response("Invalid verify token", {
+        status: 403,
+      });
     }
   }
 }
