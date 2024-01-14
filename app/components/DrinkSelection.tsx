@@ -12,31 +12,44 @@ export interface DrinkProps {
   price: number;
 }
 
-export type DrinkSelectionProps = Omit<
-  DrinkProps,
-  "milk" | "custom_request" | "price"
->;
+export type DrinkSelectionProps = Omit<DrinkProps, "milk" | "custom_request">;
 
-const drinkSelections = [
+const drinkSelections: DrinkSelectionProps[] = [
   {
     id: "iced-americano",
     name: "Iced americano",
     color: "dark",
+    price: 109,
   },
   {
     id: "spanish-latte",
     name: "Spanish latte",
     color: "orange",
+    price: 129,
   },
   {
     id: "matcha-latte",
     name: "Matcha latte",
     color: "green",
+    price: 129,
   },
   {
     id: "hazelnut-latte",
     name: "Hazelnut latte",
+    color: "light-brown",
+    price: 129,
+  },
+  {
+    id: "dark-mocha",
+    name: "Dark mocha",
     color: "dark-brown",
+    price: 129,
+  },
+  {
+    id: "white-mocha",
+    name: "White mocha",
+    color: "light",
+    price: 129,
   },
 ];
 

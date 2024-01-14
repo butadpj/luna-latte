@@ -9,8 +9,8 @@ export default function Total() {
   const shippingFee = 50;
 
   return (
-    <div className="pt-5">
-      <div className="computation flex flex-col gap-y-4 pb-5">
+    <div className="">
+      {/* <div className="computation flex flex-col gap-y-4 pb-5">
         <div className="flex justify-between ">
           <p>Subtotal</p>
           <p className="text-lg">{formatPrice(cart.totalAmount)}</p>
@@ -19,16 +19,12 @@ export default function Total() {
           <p>Shipping</p>
           <p className="text-lg">{formatPrice(shippingFee)}</p>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-between py-2 text-xl font-semibold ">
-        <p>Total</p>
-        <input
-          type="hidden"
-          name="total_price"
-          value={cart.totalAmount + shippingFee}
-        />
-        <p className="">{formatPrice(cart.totalAmount + shippingFee)}</p>
+        <p>Sub-total</p>
+        <input type="hidden" name="sub_total" value={cart.totalAmount} />
+        <p className="">{formatPrice(cart.totalAmount)}</p>
       </div>
     </div>
   );

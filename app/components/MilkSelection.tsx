@@ -7,13 +7,20 @@ export interface MilkSelectionProps {
   id: string;
   name: string;
   color: string;
+  additionalPrice?: number;
 }
 
-const milkSelections = [
+const milkSelections: MilkSelectionProps[] = [
   {
     id: "regular",
     name: "Regular",
     color: "light",
+  },
+  {
+    id: "half-half",
+    name: "1/2 milk | 1/2 cream (Add ₱20)",
+    color: "sweet",
+    additionalPrice: 20,
   },
 ];
 

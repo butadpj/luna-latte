@@ -9,11 +9,11 @@ export interface CustomRequestProps {
   color: string;
 }
 
-const customRequests = [
+const customRequests: CustomRequestProps[] = [
   {
     id: 1,
-    message: "I want it creamier!",
-    color: "light",
+    message: "Nothing, I'm good!",
+    color: "green",
   },
   {
     id: 2,
@@ -29,11 +29,6 @@ const customRequests = [
     id: 4,
     message: "I want stronger coffee!",
     color: "dark-brown",
-  },
-  {
-    id: 5,
-    message: "Nothing, I'm good!",
-    color: "green",
   },
 ];
 

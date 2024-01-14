@@ -11,6 +11,7 @@ module.exports = {
     "fill-orange",
     "fill-dark",
     "fill-dark-brown",
+    "fill-light-brown",
     "fill-light",
   ],
   prefix: "",

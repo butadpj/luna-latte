@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import logoDark from "@/assets/logos/dark.svg";
 import logoLight from "@/assets/logos/light.svg";
-import CartItems from "./components/CartItems";
+import Summary from "./components/Summary";
 
 const LOGO_SIZE = 150;
 
@@ -25,7 +25,7 @@ export default function OrderSummary() {
       />
 
       <div className="w-full flex flex-col items-center px-5">
-        <CartItems />
+        <Summary />
       </div>
     </main>
   );

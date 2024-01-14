@@ -31,6 +31,18 @@ export default function Customization() {
     if (selectedMilk === null) setSelectedRequest(null);
   }, [selectedMilk, selectedRequest]);
 
+  const computePrice = () => {
+    if (selectedDrink) {
+      if (selectedMilk?.additionalPrice) {
+        return selectedDrink?.price + selectedMilk.additionalPrice;
+      }
+
+      return selectedDrink.price;
+    }
+
+    return 0;
+  };
+
   const addOrUpdate = useAddOrUpdate({
     item: {
       id: `drink-${selectedDrink?.id}-${selectedMilk?.id}-${selectedRequest?.message}-${selectedSize}`,
@@ -39,7 +51,7 @@ export default function Customization() {
       custom_request: selectedRequest?.message || "",
       quantity,
       size: selectedSize || "",
-      price: 129,
+      price: computePrice(),
       color: selectedDrink?.color || "",
     },
     quantity,
@@ -49,7 +61,7 @@ export default function Customization() {
     <div className="w-full max-w-xl flex flex-col items-center ">
       <Header>
         <Header.MainText />
-        <Header.Bottle step={step} selectedDrinkColor={selectedDrink?.color} />
+        <Header.Bottle step={step} selectedDrink={selectedDrink} showPrice />
         <Header.ActionButtons
           step={step}
           quantity={quantity}

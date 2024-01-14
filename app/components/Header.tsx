@@ -6,6 +6,8 @@ import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { twMerge } from "tailwind-merge";
+import { DrinkProps, DrinkSelectionProps } from "./DrinkSelection";
+import { formatPrice } from "@/lib/utils";
 
 export default function Header({
   children,
@@ -49,24 +51,26 @@ export function MainText() {
 
 export function Bottle({
   step,
-  selectedDrinkColor,
+  selectedDrink = null,
+  showPrice = false,
 }: {
   step: number | undefined;
-  selectedDrinkColor: string | undefined;
+  selectedDrink: DrinkSelectionProps | null;
+  showPrice?: boolean;
 }) {
   if (!step) throw new Error("props 'step' needs to be defined");
 
   const getBottleFillColor = () => {
-    switch (selectedDrinkColor) {
+    switch (selectedDrink?.color) {
       case "" || undefined:
         return "fill-gray-400";
       case "dark-brown":
       case "dark":
         return step <= 2
-          ? `fill-${selectedDrinkColor} stroke-white`
-          : `fill-${selectedDrinkColor}`;
+          ? `fill-${selectedDrink?.color} stroke-neutral-500`
+          : `fill-${selectedDrink?.color}`;
       default:
-        return `fill-${selectedDrinkColor}`;
+        return `fill-${selectedDrink?.color}`;
     }
   };
 
@@ -78,9 +82,19 @@ export function Bottle({
         size={120}
       />
 
-      {step === 3 ? (
-        <p className="text-white absolute top-1/2 left-1/2 -translate-x-1/2 font-bold font-mono">
-          ₱129
+      {step === 3 && showPrice ? (
+        <p
+          className={twMerge(
+            `text-white absolute top-1/2 left-1/2 -translate-x-1/2 font-bold font-mono`,
+            selectedDrink?.color === "light" ||
+              selectedDrink?.color === "orange"
+              ? "text-dark"
+              : ""
+          )}
+        >
+          {formatPrice(selectedDrink?.price || 0, {
+            withoutDecimals: true,
+          })}
         </p>
       ) : null}
     </div>

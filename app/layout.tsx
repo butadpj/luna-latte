@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 import CartProvider from "@/providers/CartProvider";
+import { Toaster } from "@/shared/ui/toaster";
 
 const sono = Sono({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={cn("min-h-screen antialiased", sono.className)}>
           <CartProvider>{children}</CartProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
