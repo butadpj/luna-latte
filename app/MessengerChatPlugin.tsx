@@ -18,12 +18,14 @@ export default function MessengerChatPlugin() {
       {/* <!-- Your SDK code --> */}
       <Script>
         {`window.fbAsyncInit = function() {
-        FB.init({
-          appId            : '2084388195253551',
-          xfbml            : true,
-          version          : 'v18.0'
-        });
-      };
+          FB.init({
+              appId            : '2084388195253551',
+              xfbml            : true,
+              version          : 'v18.0'
+            });
+          };
+        };
+
 
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
