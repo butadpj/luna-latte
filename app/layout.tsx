@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Sono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -20,49 +21,43 @@ export default function RootLayout({
 }: {
   children: JSX.Element | JSX.Element[];
 }) {
+  const nonce = headers().get("x-nonce");
+
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <Script>
+          <Script strategy="lazyOnload">
             {`window.fbAsyncInit = function() {
-              FB.init({
-                  appId            : '2084388195253551',
-                  xfbml            : true,
-                  version          : 'v18.0'
-                });
+                FB.init({
+                    appId            : '416887184005538',
+                    xfbml            : true,
+                    version          : 'v18.0'
+                  });
               };
-            };
-
-
-            (function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = 'https://connect.facebook.net/en_US/sdk.js';
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
             `}
           </Script>
-          {/* <Script
-            async
-            defer
+          <Script
+            strategy="lazyOnload"
             crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js"
-          ></Script> */}
+          ></Script>
 
-          <CartProvider>{children}</CartProvider>
-          <Toaster />
-          {/* <MessengerChatPlugin /> */}
           <div
             className="fb-send-to-messenger"
             //@ts-ignore
-            messenger_app_id="2084388195253551"
+            messenger_app_id="416887184005538"
             page_id="155078761029891"
             // ref="<PASS_THROUGH_PARAM>"
             // color="<blue | white>"
             // size="<standard | large | xlarge>"
+            cta_text="SUBSCRIBE_IN_MESSENGER"
           ></div>
+
+          <CartProvider>{children}</CartProvider>
+          <Toaster />
+
+          {/* <MessengerChatPlugin /> */}
         </body>
       </html>
     </ClerkProvider>
