@@ -26,6 +26,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <meta
+          name="facebook-domain-verification"
+          content="6pxdbxzavkp3n9gg11sya66r9xjouk"
+        />
         <body className={cn("min-h-screen antialiased", sono.className)}>
           <Script strategy="afterInteractive">
             {`window.fbAsyncInit = function() {
