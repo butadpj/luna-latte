@@ -27,10 +27,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <Script strategy="lazyOnload">
+          <Script strategy="afterInteractive">
             {`window.fbAsyncInit = function() {
                 FB.init({
-                    appId            : '416887184005538',
+                    appId            : '2084388195253551',
                     xfbml            : true,
                     version          : 'v18.0'
                   });
@@ -38,7 +38,7 @@ export default function RootLayout({
             `}
           </Script>
           <Script
-            strategy="lazyOnload"
+            strategy="afterInteractive"
             crossOrigin="anonymous"
             src="https://connect.facebook.net/en_US/sdk.js"
           ></Script>
@@ -46,7 +46,7 @@ export default function RootLayout({
           <div
             className="fb-send-to-messenger"
             //@ts-ignore
-            messenger_app_id="416887184005538"
+            messenger_app_id="2084388195253551"
             page_id="155078761029891"
             // ref="<PASS_THROUGH_PARAM>"
             // color="<blue | white>"
