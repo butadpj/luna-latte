@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/shared/ui/button";
 import {
   Form,
   FormControl,
@@ -29,7 +28,11 @@ import cities from "@/lib/cities";
 import { useUser } from "@clerk/nextjs";
 import SendToMessenger from "@/shared/SendToMessenger";
 
-export default function OrderForm() {
+export default function OrderForm({
+  submitButton = null,
+}: {
+  submitButton: JSX.Element | null;
+}) {
   const { user } = useUser();
 
   const [selectedClaimMethod, setSelectedClaimMethod] =
@@ -283,9 +286,11 @@ export default function OrderForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" size={"lg"}>
-          <SendToMessenger />
-        </Button>
+
+        {submitButton}
+        {/* <SendToMessenger /> */}
+
+        {/* <Button type="submit" size={"lg"}></Button> */}
       </form>
     </Form>
   );

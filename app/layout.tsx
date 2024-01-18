@@ -21,8 +21,6 @@ export default function RootLayout({
 }: {
   children: JSX.Element | JSX.Element[];
 }) {
-  const nonce = headers().get("x-nonce");
-
   return (
     <ClerkProvider>
       <html lang="en">
@@ -31,33 +29,6 @@ export default function RootLayout({
           content="6pxdbxzavkp3n9gg11sya66r9xjouk"
         />
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <Script strategy="afterInteractive">
-            {`window.fbAsyncInit = function() {
-                FB.init({
-                    appId            : '2084388195253551',
-                    xfbml            : true,
-                    version          : 'v18.0'
-                  });
-              };
-            `}
-          </Script>
-          <Script
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-            src="https://connect.facebook.net/en_US/sdk.js"
-          ></Script>
-
-          <div
-            className="fb-send-to-messenger"
-            //@ts-ignore
-            messenger_app_id="2084388195253551"
-            page_id="155078761029891"
-            // ref="<PASS_THROUGH_PARAM>"
-            // color="<blue | white>"
-            // size="<standard | large | xlarge>"
-            cta_text="SUBSCRIBE_IN_MESSENGER"
-          ></div>
-
           <CartProvider>{children}</CartProvider>
           <Toaster />
 

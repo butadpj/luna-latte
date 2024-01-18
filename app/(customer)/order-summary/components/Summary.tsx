@@ -21,6 +21,7 @@ import {
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import OrderForm from "./OrderForm";
+import OrderModal from "./OrderModal";
 
 export default function Summary() {
   const { cart, removeAllCartItems } = useContext(CartContext);
@@ -36,20 +37,10 @@ export default function Summary() {
 
   return (
     <>
-      <Dialog
-        onOpenChange={(open) => setShowConfirmOrderModal(open)}
-        open={showConfirmOrderModal}
-      >
-        <DialogContent className="lg:max-w-screen-sm overflow-y-scroll max-h-screen">
-          <DialogHeader>
-            <DialogTitle className="mb-10">
-              We just need more of your details :)
-            </DialogTitle>
-
-            <OrderForm />
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      <OrderModal
+        isOpen={showConfirmOrderModal}
+        onOpenChange={setShowConfirmOrderModal}
+      />
 
       <div className="w-full max-w-xl">
         <Header />

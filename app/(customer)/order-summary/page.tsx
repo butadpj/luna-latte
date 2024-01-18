@@ -3,6 +3,7 @@ import Image from "next/image";
 import logoDark from "@/assets/logos/dark.svg";
 import logoLight from "@/assets/logos/light.svg";
 import Summary from "./components/Summary";
+import SendToMessenger from "@/shared/SendToMessenger";
 
 const LOGO_SIZE = 150;
 
