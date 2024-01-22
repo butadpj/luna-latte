@@ -10,17 +10,6 @@ import { twMerge } from "tailwind-merge";
 import Total from "./Total";
 import CartItems from "./CartItems";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/shared/ui/dialog";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
-import OrderForm from "./OrderForm";
 import OrderModal from "./OrderModal";
 
 export default function Summary() {
@@ -39,7 +28,11 @@ export default function Summary() {
     <>
       <OrderModal
         isOpen={showConfirmOrderModal}
-        onOpenChange={setShowConfirmOrderModal}
+        onOpenChange={(open) => {
+          if (!open) {
+            // window.location.reload();
+          } else setShowConfirmOrderModal(true);
+        }}
       />
 
       <div className="w-full max-w-xl">

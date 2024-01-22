@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -16,13 +18,13 @@ export default function OrderModal({
 }) {
   return (
     <Dialog onOpenChange={onOpenChange} open={isOpen}>
-      <DialogContent className="lg:max-w-screen-sm overflow-y-scroll max-h-screen">
+      <DialogContent className="pb-0 px-0 lg:max-w-screen-sm overflow-y-scroll max-h-screen">
         <DialogHeader>
-          <DialogTitle className="mb-10">
+          <DialogTitle className="mb-5 px-6">
             We just need more of your details :)
           </DialogTitle>
 
-          <OrderForm submitButton={<SendToMessenger />} />
+          <OrderForm />
         </DialogHeader>
       </DialogContent>
     </Dialog>

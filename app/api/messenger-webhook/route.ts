@@ -35,7 +35,26 @@ export async function GET(req: NextRequest, res: NextResponse) {
 export async function POST(request: Request) {
   try {
     const text = await request.text();
-    console.log(JSON.parse(text));
+    console.log(JSON.parse(text).entry[0].messaging[0]);
+    const { sender: recipient } = JSON.parse(text).entry[0].messaging[0];
+
+    const userProfile = await (
+      await fetch(
+        `https://graph.facebook.com/${recipient.id}?fields=first_name,last_name,profile_pic&access_token=${process.env.PAGES_ACCESS_TOKEN}`
+      )
+    ).json();
+
+    const response = await (
+      await fetch(
+        `https://graph.facebook.com/v18.0/155078761029891/messages?recipient={'id': ${recipient.id}}&messaging_type=UPDATE&message={'text':'We have received your order'}&access_token=${process.env.PAGES_ACCESS_TOKEN}`,
+        {
+          method: "POST",
+        }
+      )
+    ).json();
+
+    console.log("RES: ", response, userProfile);
+
     // Process the webhook payload
   } catch (error) {
     return new Response(`Webhook error: ${error.message}`, {
