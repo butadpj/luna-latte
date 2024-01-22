@@ -75,7 +75,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           console.log(`Syncing user ${emails[0]} to database..`);
 
           const user = await createDbUser({
-            clerk_id: id,
+            id,
             image_url,
             first_name,
             last_name,
