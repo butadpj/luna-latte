@@ -28,13 +28,13 @@ interface CartItemUpdateProps
 interface CartProps {
   status: "LOADING" | "INIT";
   cartItems: CartItemProps[] | never[];
-  totalItems: number;
+  total_items: number;
   totalAmount: number;
 }
 
 interface ContextType {
   cart: {
-    totalItems: number;
+    total_items: number;
     totalAmount: number;
     status: "LOADING" | "INIT";
     cartItems: CartItemProps[] | never[];
@@ -59,14 +59,14 @@ export default function CartProvider({
   const [cart, setCart] = useState<CartProps>({
     status: "LOADING",
     cartItems: [],
-    totalItems: 0,
+    total_items: 0,
     totalAmount: 0,
   });
 
   const computedCart = useMemo(() => {
     return {
       ...cart,
-      totalItems: cart.cartItems.reduce(
+      total_items: cart.cartItems.reduce(
         (total, item) => total + item.quantity,
         0
       ),

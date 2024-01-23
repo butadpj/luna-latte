@@ -1,4 +1,6 @@
 import { CartContext, CartItemProps } from "@/providers/CartProvider";
+import { User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 
 export function useAddOrUpdate({
@@ -33,4 +35,21 @@ export function useAddOrUpdate({
       }
     }
   };
+}
+
+export function useCurrentUser() {
+  const fetchCurrentUser = async () => {
+    return (await fetch("/api/users/me", { cache: "reload" })).json();
+  };
+
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["current-user"],
+    queryFn: fetchCurrentUser,
+  });
+
+  return { user, isLoading, error };
 }

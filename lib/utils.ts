@@ -58,3 +58,18 @@ export function formatPrice(
     }).format(price)}`;
   }
 }
+
+export function getFullAddress(address: {
+  street: string;
+  city: string;
+  barangay?: string | undefined;
+  province?: string | undefined;
+}) {
+  if (address.street && address.barangay && address.city && address.province)
+    return `${address.street}, ${address.barangay}, ${address.city}, ${address.province}`;
+
+  if (address.street && address.city && address.province)
+    return `${address.street}, ${address.city}, ${address.province}`;
+
+  return null;
+}

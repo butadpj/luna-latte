@@ -53,31 +53,36 @@ model Milk {
 
 model Order {
   id               String        @id @default(uuid())
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  completedAt      DateTime?
-  isCompleted      Boolean       @default(false)
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  completed_at      DateTime?
+  is_completed      Boolean       @default(false)
   status           Status        @default(TO_CONFIRM)
-  totalPrice       Decimal
-  totalItems       Int
+  total_price       Decimal
+  total_items       Int
   customer_name    String?
-  deliveryAddress  String
-  customRequest    String?
+  delivery_address  String
+  landmark         String?
+  custom_request    String?
   claim_method     ClaimMethod   @default(DELIVERY)
   payment_method   PaymentMethod @default(GCASH)
-  loggedInCustomer User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           String?
+  logged_in_customer User?         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id           String?
   items            OrderItem[]
+
+  @@index([user_id])
 }
 
 model OrderItem {
   id       String  @id @default(uuid())
-  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId  String
+  order    Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id  String
   name     String
   price    Decimal
   quantity Int
   size     String
+
+  @@index([order_id])
 }
 
 enum Status {

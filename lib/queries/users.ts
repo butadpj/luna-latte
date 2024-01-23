@@ -1,5 +1,44 @@
 import { prisma } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs";
 import { Prisma, User } from "@prisma/client";
+
+export async function getCurrentUser() {
+  try {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) return null;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: clerkUser.id,
+      },
+    });
+
+    if (user) return user;
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getUserById(user_id: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: user_id,
+      },
+    });
+
+    if (user) return user;
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 export async function createDbUser(user: Prisma.UserCreateInput) {
   try {
@@ -15,11 +54,11 @@ export async function createDbUser(user: Prisma.UserCreateInput) {
   }
 }
 
-export async function deleteDbUser(userId: string) {
+export async function deleteDbUser(user_id: string) {
   try {
     const createdUser = await prisma.user.delete({
       where: {
-        id: userId,
+        id: user_id,
       },
     });
 

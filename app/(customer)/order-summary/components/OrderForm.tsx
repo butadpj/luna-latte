@@ -24,20 +24,22 @@ import {
 } from "@/shared/ui/select";
 import { Label } from "@/shared/ui/label";
 import cities from "@/lib/cities";
-import { useUser } from "@clerk/nextjs";
 import SendToMessenger from "@/shared/SendToMessenger";
-import { Button } from "@/shared/ui/button";
-import { Facebook, FacebookIcon } from "lucide-react";
 import Link from "next/link";
+import { getFullAddress } from "@/lib/utils";
+import { useCurrentUser } from "@/shared/hooks";
+import { createOrderAction } from "../action";
 
 export default function OrderForm({}: {}) {
-  const { user } = useUser();
+  const { user, isLoading } = useCurrentUser();
+
+  console.log("USER: ", user);
 
   const FormSchema = z.object({
     name: z.string().min(2, {
       message: "Username must be at least 2 characters.",
     }),
-    claim_method: z.string(),
+    claim_method: z.enum(["DELIVERY"]),
     address: z.object({
       street: z.string().min(1, {
         message: "Please enter a valid street name",
@@ -49,7 +51,7 @@ export default function OrderForm({}: {}) {
       province: z.string().optional(),
       landmark: z.string().min(1, { message: "Please enter a valid landmark" }),
     }),
-    payment_method: z.string(),
+    payment_method: z.enum(["GCASH", "BANK_TRANSFER"]),
   });
 
   const validCities = cities
@@ -67,9 +69,9 @@ export default function OrderForm({}: {}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     values: {
-      name: user?.fullName || "",
-      claim_method: "delivery",
-      payment_method: "gcash",
+      name: user?.full_name || "",
+      claim_method: "DELIVERY",
+      payment_method: "GCASH",
       address: {
         city: "",
         street: "",
@@ -117,6 +119,8 @@ export default function OrderForm({}: {}) {
 
   const { isValid, isValidating } = useFormState({ control: form.control });
 
+  if (isLoading && !user) return null;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
@@ -156,8 +160,7 @@ export default function OrderForm({}: {}) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="delivery">Delivery</SelectItem>
-                      <SelectItem value="pick-up">Pick up</SelectItem>
+                      <SelectItem value="DELIVERY">Delivery</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -168,7 +171,7 @@ export default function OrderForm({}: {}) {
               </FormItem>
             )}
           />
-          {watchClaimMethod === "delivery" ? (
+          {watchClaimMethod === "DELIVERY" ? (
             <div className="flex flex-col items-start">
               <Label className="mb-2">Address</Label>
               <div className="fields w-full space-y-2">
@@ -295,7 +298,7 @@ export default function OrderForm({}: {}) {
                     </FormControl>
                     <SelectContent>
                       {/* <SelectItem value="cod">Cash on Delivery (COD)</SelectItem> */}
-                      <SelectItem value="gcash">Gcash</SelectItem>
+                      <SelectItem value="GCASH">Gcash</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -328,6 +331,23 @@ export default function OrderForm({}: {}) {
             }}
             onOptIn={async () => {
               // Save order in database to fetch it from webhook endpoint
+              const { name, address, claim_method, payment_method } =
+                form.getValues();
+
+              const createdOrder = await createOrderAction({
+                details: {
+                  customer_name: name,
+                  delivery_address: getFullAddress(address) || "",
+                  claim_method,
+                  payment_method,
+                  total_items: 0,
+                  total_price: 0,
+                  landmark: address.landmark,
+                },
+                items: [],
+              });
+
+              console.log(createdOrder);
             }}
           />
           <div className="text-dark text-sm italic mt-1 text-left">

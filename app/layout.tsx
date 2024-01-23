@@ -8,6 +8,7 @@ import CartProvider from "@/providers/CartProvider";
 import { Toaster } from "@/shared/ui/toaster";
 import Script from "next/script";
 import MessengerChatPlugin from "./MessengerChatPlugin";
+import Providers from "@/providers/Providers";
 
 const sono = Sono({ subsets: ["latin"] });
 
@@ -29,7 +30,7 @@ export default function RootLayout({
           content="6pxdbxzavkp3n9gg11sya66r9xjouk"
         />
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <CartProvider>{children}</CartProvider>
+          <Providers>{children}</Providers>
           <Toaster />
 
           {/* <MessengerChatPlugin /> */}
