@@ -3,9 +3,14 @@ import { getUserById } from "@/lib/queries/users";
 export async function GET(req: Request, { params }: any) {
   const user = await getUserById(params.id);
 
-  if (user) return Response.json(user);
+  if (user)
+    return Response.json(user, {
+      status: 200,
+    });
 
-  return null;
+  return Response.json(null, {
+    status: 404,
+  });
 }
 
 // export async function PATCH(req) {
