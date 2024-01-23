@@ -1,9 +1,9 @@
 import { getUserById } from "@/lib/queries/users";
-import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: any) {
   const user = await getUserById(params.id);
-  if (user) return NextResponse.json(user);
+
+  if (user) return Response.json(user);
 
   return null;
 }
