@@ -17,7 +17,7 @@ export async function createOrderAction({
 }) {
   const createdOrder = await createOrder({
     details,
-    items: [],
+    items,
   });
 
   if (createdOrder) return createdOrder;

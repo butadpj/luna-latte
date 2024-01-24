@@ -3,6 +3,7 @@
 
 import Script from "next/script";
 import { useEffect } from "react";
+import { generate } from "short-uuid";
 
 export default function SendToMessenger({
   className = "",
@@ -11,18 +12,17 @@ export default function SendToMessenger({
 }: {
   className?: string;
   onClickButton?: () => void;
-  onOptIn: () => void;
+  onOptIn: (ref: string) => void;
 }) {
   useEffect(() => {
     window.fbAsyncInit = function () {
-      console.log("FB INIT");
       const handler = (e) => {
-        const { event } = e;
+        const { event, ref } = e;
 
         if (event === "clicked") {
           onClickButton();
         } else if (event === "opt_in") {
-          onOptIn();
+          onOptIn(ref);
         }
       };
 
@@ -62,6 +62,7 @@ export default function SendToMessenger({
         page_id="155078761029891"
         color="blue"
         size="large"
+        data-ref={generate()}
         cta_text="GET_STARTED"
       ></div>
       <Script

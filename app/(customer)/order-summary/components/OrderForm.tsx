@@ -29,11 +29,12 @@ import Link from "next/link";
 import { getFullAddress } from "@/lib/utils";
 import { useCurrentUser } from "@/shared/hooks";
 import { createOrderAction } from "../action";
+import { useContext } from "react";
+import { CartContext } from "@/providers/CartProvider";
 
 export default function OrderForm({}: {}) {
   const { user, isLoading } = useCurrentUser();
-
-  console.log("USER: ", user);
+  const { cart } = useContext(CartContext);
 
   const FormSchema = z.object({
     name: z.string().min(2, {
@@ -118,8 +119,6 @@ export default function OrderForm({}: {}) {
   }
 
   const { isValid, isValidating } = useFormState({ control: form.control });
-
-  if (isLoading && !user) return null;
 
   return (
     <Form {...form}>
@@ -329,25 +328,28 @@ export default function OrderForm({}: {}) {
                 ),
               });
             }}
-            onOptIn={async () => {
+            onOptIn={async (ref) => {
               // Save order in database to fetch it from webhook endpoint
               const { name, address, claim_method, payment_method } =
                 form.getValues();
 
+              console.log("Order ref: ", ref);
+
               const createdOrder = await createOrderAction({
                 details: {
+                  ref,
                   customer_name: name,
                   delivery_address: getFullAddress(address) || "",
                   claim_method,
                   payment_method,
-                  total_items: 0,
-                  total_price: 0,
+                  total_items: cart.total_items,
+                  total_price: cart.totalAmount,
                   landmark: address.landmark,
                 },
-                items: [],
+                items: cart.cartItems,
               });
 
-              console.log(createdOrder);
+              if (createdOrder) window.location.reload();
             }}
           />
           <div className="text-dark text-sm italic mt-1 text-left">

@@ -40,12 +40,35 @@ export async function createOrder({
       data: {
         ...details,
         items: {
-          create: items,
+          create: items.map((item) => ({
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            size: item.size,
+          })),
         },
       },
     });
 
     return createdOrder;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getOrderByRef(ref: string) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: {
+        ref,
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    return order;
   } catch (error) {
     console.error(error);
     throw error;

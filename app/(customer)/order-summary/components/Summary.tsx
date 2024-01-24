@@ -30,8 +30,7 @@ export default function Summary() {
         isOpen={showConfirmOrderModal}
         onOpenChange={(open) => {
           if (!open) {
-            // window.location.reload();
-            setShowConfirmOrderModal(false);
+            window.location.reload();
           } else setShowConfirmOrderModal(true);
         }}
       />
