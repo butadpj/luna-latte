@@ -8,6 +8,7 @@ export default authMiddleware({
   publicRoutes: [
     "/",
     "/order-summary",
+    "/privacy-policy",
     "/api/messenger-webhook",
     "/api/webhook",
   ],
