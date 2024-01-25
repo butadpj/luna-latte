@@ -13,7 +13,7 @@ import Providers from "@/providers/Providers";
 const sono = Sono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Luna Latte | Order the perfect coffee for YOU!",
+  title: "Luna-Latte Cafe | Better Latte than never!",
   description: "Order and customize your coffee with ease!",
 };
 
