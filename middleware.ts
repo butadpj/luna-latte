@@ -13,6 +13,7 @@ export default authMiddleware({
     "/api/webhook",
   ],
   apiRoutes: [],
+  debug: true,
 });
 
 // export function middleware(request: NextRequest) {

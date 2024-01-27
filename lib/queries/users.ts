@@ -8,6 +8,10 @@ export async function getCurrentUser() {
 
     if (!clerkUser) return null;
 
+    console.log(clerkUser.id);
+    const users = await prisma.user.findMany();
+    console.log(users);
+
     const user = await prisma.user.findUnique({
       where: {
         id: clerkUser.id,
