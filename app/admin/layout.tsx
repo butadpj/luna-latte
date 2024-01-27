@@ -27,9 +27,9 @@ export default async function AdminLayout({
 }) {
   const user = await getCurrentUser();
 
-  if (!allowedRoles.includes(user?.role || "")) {
-    redirect("/");
-  }
+  // if (!allowedRoles.includes(user?.role || "")) {
+  //   redirect("/");
+  // }
 
   return (
     <main className={inter.className}>
