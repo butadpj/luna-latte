@@ -307,7 +307,7 @@ export default function OrderForm({}: {}) {
             )}
           />
         </div>
-        <div className="bg-light px-5 py-2">
+        <div className="bg-LIGHT px-5 py-2">
           <SendToMessenger
             className={`${
               isValid && !isValidating
@@ -343,7 +343,7 @@ export default function OrderForm({}: {}) {
                   claim_method,
                   payment_method,
                   total_items: cart.total_items,
-                  total_price: cart.totalAmount,
+                  total_price: cart.total_amount,
                   landmark: address.landmark,
                 },
                 items: cart.cartItems,
@@ -352,7 +352,7 @@ export default function OrderForm({}: {}) {
               if (createdOrder) window.location.reload();
             }}
           />
-          <div className="text-dark text-sm italic mt-1 text-left">
+          <div className="text-DARK text-sm italic mt-1 text-left">
             You will receive a message from{" "}
             <Link
               target="_blank"

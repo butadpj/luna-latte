@@ -2,24 +2,32 @@
 
 import { createContext, useEffect, useMemo, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@/lib/utils";
-import { DrinkProps } from "@/app/components/DrinkSelection";
+import { $Enums, Drink, Milk, Prisma } from "@prisma/client";
 
 type Modify<T, R> = Omit<T, keyof R> & R;
 
-export interface CartItemProps extends DrinkProps {
-  quantity: number;
-  size: string;
-}
+interface CartItemMilk
+  extends Omit<Milk, "id" | "created_at" | "updated_at" | "color"> {}
+
+export interface CartItemProps
+  extends Modify<
+    Omit<Drink, "created_at" | "updated_at">,
+    {
+      quantity: number;
+      milk: CartItemMilk;
+      custom_request: string;
+    }
+  > {}
 
 interface CartItemUpdateProps
   extends Modify<
     Omit<CartItemProps, "id">,
     {
-      color?: string;
+      color?: $Enums.Color;
       price?: number;
-      size?: string;
+      size?: $Enums.DrinkSize;
       name?: string;
-      milk?: string;
+      milk?: Milk;
       custom_request?: string;
       quantity?: number;
     }
@@ -27,17 +35,17 @@ interface CartItemUpdateProps
 
 interface CartProps {
   status: "LOADING" | "INIT";
-  cartItems: CartItemProps[] | never[];
+  cartItems: CartItemProps[];
   total_items: number;
-  totalAmount: number;
+  total_amount: number;
 }
 
 interface ContextType {
   cart: {
     total_items: number;
-    totalAmount: number;
+    total_amount: number;
     status: "LOADING" | "INIT";
-    cartItems: CartItemProps[] | never[];
+    cartItems: CartItemProps[];
   };
   addToCart: (newItem: CartItemProps) => void;
   updateCartItem: (
@@ -60,7 +68,7 @@ export default function CartProvider({
     status: "LOADING",
     cartItems: [],
     total_items: 0,
-    totalAmount: 0,
+    total_amount: 0,
   });
 
   const computedCart = useMemo(() => {
@@ -70,8 +78,10 @@ export default function CartProvider({
         (total, item) => total + item.quantity,
         0
       ),
-      totalAmount: cart.cartItems.reduce(
-        (total, item) => total + item.price * item.quantity,
+      total_amount: cart.cartItems.reduce(
+        (total, item) =>
+          total +
+          (item.price + (item.milk.additional_price || 0)) * item.quantity,
         0
       ),
     };

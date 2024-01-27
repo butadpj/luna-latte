@@ -6,8 +6,8 @@ import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { twMerge } from "tailwind-merge";
-import { DrinkProps, DrinkSelectionProps } from "./DrinkSelection";
 import { formatPrice } from "@/lib/utils";
+import { Drink, DrinkSize, Milk } from "@prisma/client";
 
 export default function Header({
   children,
@@ -35,7 +35,7 @@ export function MainText() {
             href={"/order-summary"}
             className={twMerge(
               buttonVariants({
-                variant: "green",
+                variant: "GREEN",
                 size: "lg",
               }),
               "text-xl"
@@ -52,10 +52,12 @@ export function MainText() {
 export function Bottle({
   step,
   selectedDrink = null,
+  selectedMilk = null,
   showPrice = false,
 }: {
   step: number | undefined;
-  selectedDrink: DrinkSelectionProps | null;
+  selectedDrink: Drink | null;
+  selectedMilk: Milk | null;
   showPrice?: boolean;
 }) {
   if (!step) throw new Error("props 'step' needs to be defined");
@@ -64,8 +66,8 @@ export function Bottle({
     switch (selectedDrink?.color) {
       case "" || undefined:
         return "fill-gray-400";
-      case "dark-brown":
-      case "dark":
+      case "DARK_BROWN":
+      case "DARK":
         return step <= 2
           ? `fill-${selectedDrink?.color} stroke-neutral-500`
           : `fill-${selectedDrink?.color}`;
@@ -85,16 +87,22 @@ export function Bottle({
       {step === 3 && showPrice ? (
         <p
           className={twMerge(
-            `text-white absolute top-1/2 left-1/2 -translate-x-1/2 font-bold font-mono`,
-            selectedDrink?.color === "light" ||
-              selectedDrink?.color === "orange"
-              ? "text-dark"
+            `text-white absolute text-xs top-1/2 left-1/2 -translate-x-1/2 font-bold font-mono text-center`,
+            selectedDrink?.color === "LIGHT" ||
+              selectedDrink?.color === "ORANGE"
+              ? "text-DARK"
               : ""
           )}
         >
-          {formatPrice(selectedDrink?.price || 0, {
+          {`${formatPrice(selectedDrink?.price || 0, {
             withoutDecimals: true,
-          })}
+          })} ${
+            selectedMilk?.additional_price
+              ? `+ ${formatPrice(selectedMilk?.additional_price || 0, {
+                  withoutDecimals: true,
+                })}`
+              : ""
+          }`}
         </p>
       ) : null}
     </div>
@@ -112,10 +120,10 @@ export function ActionButtons({
 }: {
   step: number | undefined;
   quantity: number;
-  selectedDrinkColor: string | undefined;
+  selectedDrinkColor: string | undefined | null;
   setQuantity: Dispatch<SetStateAction<number>>;
   selectedSize: string;
-  setSelectedSize: Dispatch<SetStateAction<string>>;
+  setSelectedSize: Dispatch<SetStateAction<DrinkSize>>;
   onClickContinue: () => void;
 }) {
   return step === 3 ? (
@@ -151,10 +159,10 @@ export function ActionButtons({
             className="bg-transparent"
             value={selectedSize}
             onChange={(e) => {
-              setSelectedSize(e.target.value);
+              setSelectedSize(e.target.value as DrinkSize);
             }}
           >
-            <option value={"460 ml"}>460 ml</option>
+            <option value={"ML_460"}>460 ml</option>
           </select>
         </div>
       </div>

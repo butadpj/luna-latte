@@ -53,7 +53,7 @@ export default function Summary() {
               <Link
                 href={"/"}
                 className={twMerge(
-                  buttonVariants({ variant: "green", size: "sm" }),
+                  buttonVariants({ variant: "GREEN", size: "sm" }),
                   "flex gap-1 items-center"
                 )}
               >
@@ -68,7 +68,7 @@ export default function Summary() {
 
             <div className="mt-4 w-full flex items-start justify-end">
               <Button
-                variant={"orange"}
+                variant={"ORANGE"}
                 size={"sm"}
                 onClick={() => {
                   setShowConfirmOrderModal(true);

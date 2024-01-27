@@ -13,7 +13,7 @@ export default function Total() {
       {/* <div className="computation flex flex-col gap-y-4 pb-5">
         <div className="flex justify-between ">
           <p>Subtotal</p>
-          <p className="text-lg">{formatPrice(cart.totalAmount)}</p>
+          <p className="text-lg">{formatPrice(cart.total_amount)}</p>
         </div>
         <div className="flex justify-between ">
           <p>Shipping</p>
@@ -23,8 +23,8 @@ export default function Total() {
 
       <div className="flex justify-between py-2 text-xl font-semibold ">
         <p>Sub-total</p>
-        <input type="hidden" name="sub_total" value={cart.totalAmount} />
-        <p className="">{formatPrice(cart.totalAmount)}</p>
+        <input type="hidden" name="sub_total" value={cart.total_amount} />
+        <p className="">{formatPrice(cart.total_amount)}</p>
       </div>
     </div>
   );

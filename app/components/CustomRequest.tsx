@@ -13,22 +13,22 @@ const customRequests: CustomRequestProps[] = [
   {
     id: 1,
     message: "Nothing, I'm good!",
-    color: "green",
+    color: "GREEN",
   },
   {
     id: 2,
     message: "I want it sweeter!",
-    color: "sweet",
+    color: "SWEET",
   },
   {
     id: 3,
     message: "I want less stronger coffee!",
-    color: "light-brown",
+    color: "LIGHT_BROWN",
   },
   {
     id: 4,
     message: "I want stronger coffee!",
-    color: "dark-brown",
+    color: "DARK_BROWN",
   },
 ];
 

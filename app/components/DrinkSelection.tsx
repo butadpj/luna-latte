@@ -1,64 +1,17 @@
 "use client";
 
 import { Button } from "@/shared/ui/button";
+import { Drink } from "@prisma/client";
 import { CupSodaIcon } from "lucide-react";
 
-export interface DrinkProps {
-  id: string;
-  name: string;
-  color: string;
-  milk: string;
-  custom_request: string;
-  price: number;
-}
-
-export type DrinkSelectionProps = Omit<DrinkProps, "milk" | "custom_request">;
-
-const drinkSelections: DrinkSelectionProps[] = [
-  {
-    id: "iced-americano",
-    name: "Iced americano",
-    color: "dark",
-    price: 109,
-  },
-  {
-    id: "spanish-latte",
-    name: "Spanish latte",
-    color: "orange",
-    price: 129,
-  },
-  {
-    id: "matcha-latte",
-    name: "Matcha latte",
-    color: "green",
-    price: 129,
-  },
-  {
-    id: "hazelnut-latte",
-    name: "Hazelnut latte",
-    color: "light-brown",
-    price: 129,
-  },
-  {
-    id: "dark-mocha",
-    name: "Dark mocha",
-    color: "dark-brown",
-    price: 129,
-  },
-  {
-    id: "white-mocha",
-    name: "White mocha",
-    color: "light",
-    price: 129,
-  },
-];
-
 export default function DrinkSelection({
+  drinks,
   selectedDrink = null,
-  setSelectedDrink = (drink: DrinkSelectionProps) => {},
+  setSelectedDrink = (drink: Drink) => {},
 }: {
-  selectedDrink: DrinkSelectionProps | null;
-  setSelectedDrink: (drink: DrinkSelectionProps) => void;
+  drinks: Drink[];
+  selectedDrink: Drink | null;
+  setSelectedDrink: (drink: Drink) => void;
 }) {
   return (
     <div className="drink-selection">
@@ -85,7 +38,7 @@ export default function DrinkSelection({
       </div>
 
       <div className="selection mt-5 pl-5 flex flex-col gap-6 items-start">
-        {drinkSelections.map((drink) => (
+        {drinks.map((drink) => (
           <Button
             id={`drink-${drink.id}`}
             key={drink.id}

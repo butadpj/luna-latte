@@ -3,11 +3,11 @@ import { formatPrice } from "@/lib/utils";
 import { CartContext } from "@/providers/CartProvider";
 import BottleSVG from "@/shared/BottleSVG";
 import { Button } from "@/shared/ui/button";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { Fragment, useContext } from "react";
 
 export default function CartItems() {
-  const { cart, updateCartItem } = useContext(CartContext);
+  const { cart, updateCartItem, removeCartItemById } = useContext(CartContext);
 
   const getBottleFillColor = (selectedDrinkColor: string | null) => {
     switch (selectedDrinkColor) {
@@ -23,19 +23,43 @@ export default function CartItems() {
       {cart.cartItems.map((item, index) => (
         <Fragment key={item.id}>
           <li className="item">
-            <div className="font-bold flex text-lg items-center gap-2 mb-2">
-              - {item.name} ({formatPrice(item.price * item.quantity)})
-              <BottleSVG
-                step={3}
-                className={getBottleFillColor(item.color)}
-                size={36}
-              />
+            <div className="flex items-center justify-between">
+              <div className="font-bold flex text-lg items-center gap-2 mb-2">
+                - {item.name}{" "}
+                {`(${formatPrice(item.price)}${
+                  item.milk.additional_price
+                    ? ` + ${formatPrice(item.milk.additional_price, {
+                        withoutDecimals: true,
+                      })}`
+                    : ""
+                })`}
+                <BottleSVG
+                  step={3}
+                  className={getBottleFillColor(item.color)}
+                  size={36}
+                />
+              </div>
+              <Button
+                variant={"destructive"}
+                size={"icon"}
+                onClick={() => {
+                  if (confirm("Remove this item from cart?"))
+                    removeCartItemById(item.id);
+                }}
+              >
+                <TrashIcon size={16} />
+              </Button>
             </div>
             <div className="details pl-5">
               <div>
                 <label>Milk:</label>{" "}
                 <span className="underline underline-offset-2">
-                  {item.milk}
+                  {item.milk.name}{" "}
+                  {item.milk.additional_price
+                    ? `(+${formatPrice(item.milk.additional_price, {
+                        withoutDecimals: true,
+                      })})`
+                    : ""}
                 </span>
               </div>
               <div>
@@ -88,9 +112,12 @@ export default function CartItems() {
                 </div>
               </div>
               <div>
-                <label>Price:</label>{" "}
+                <label>Final price:</label>{" "}
                 <span className="underline underline-offset-2">
-                  {formatPrice(item.price)}
+                  {formatPrice(
+                    (item.price + (item.milk.additional_price || 0)) *
+                      item.quantity
+                  )}
                 </span>
               </div>
             </div>

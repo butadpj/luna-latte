@@ -27,7 +27,7 @@ export default function RootLayout({
       <html lang="en">
         <meta
           name="facebook-domain-verification"
-          content="6pxdbxzavkp3n9gg11sya66r9xjouk"
+          content="2alpwfc9ut26ahx94evdvtsz3adn4v"
         />
         <body className={cn("min-h-screen antialiased", sono.className)}>
           <Providers>{children}</Providers>

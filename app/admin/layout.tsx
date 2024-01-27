@@ -7,6 +7,7 @@ import MainNav from "./components/MainNav";
 import { Tabs } from "@/shared/ui/tabs";
 
 import { Inter } from "next/font/google";
+import { getCurrentUser } from "@/lib/queries/users";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,16 +17,19 @@ export async function generateMetadata() {
     description: "",
   };
 }
+
+const allowedRoles = ["ADMIN", "STAFF"];
+
 export default async function AdminLayout({
   children,
 }: {
   children: JSX.Element | JSX.Element[];
 }) {
-  // const user = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  // if (user?.role !== "ADMIN") {
-  //   redirect("/");
-  // }
+  if (!user || !allowedRoles.includes(user.role)) {
+    redirect("/");
+  }
 
   return (
     <main className={inter.className}>

@@ -4,10 +4,15 @@ import logoDark from "@/assets/logos/dark.svg";
 import logoLight from "@/assets/logos/light.svg";
 import Customization from "../components/Customization";
 import Footer from "@/shared/Footer";
+import { getAllDrinks } from "@/lib/queries/drinks";
+import { getAllMilks } from "@/lib/queries/milks";
 
 const LOGO_SIZE = 150;
 
-export default function Home() {
+export default async function Home() {
+  const drinks = await getAllDrinks();
+  const milks = await getAllMilks();
+
   return (
     <>
       <main className="flex min-h-screen flex-col items-center pb-24">
@@ -28,7 +33,7 @@ export default function Home() {
           />
         </div>
 
-        <Customization />
+        <Customization drinks={drinks} milks={milks} />
       </main>
       <Footer />
     </>

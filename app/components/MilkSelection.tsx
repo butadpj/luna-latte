@@ -1,37 +1,20 @@
 "use client";
 
+import { formatPrice } from "@/lib/utils";
 import { Button } from "@/shared/ui/button";
+import { Milk } from "@prisma/client";
 import { MilkIcon, XIcon } from "lucide-react";
 
-export interface MilkSelectionProps {
-  id: string;
-  name: string;
-  color: string;
-  additionalPrice?: number;
-}
-
-const milkSelections: MilkSelectionProps[] = [
-  {
-    id: "regular",
-    name: "Regular",
-    color: "light",
-  },
-  {
-    id: "half-half",
-    name: "1/2 milk | 1/2 cream (Add ₱20)",
-    color: "sweet",
-    additionalPrice: 20,
-  },
-];
-
 export default function MilkSelection({
+  milks,
   isDisabled = true,
   selectedMilk = null,
-  setSelectedMilk = (milk: MilkSelectionProps | null) => {},
+  setSelectedMilk = (milk: Milk | null) => {},
 }: {
+  milks: Milk[];
   isDisabled: boolean;
-  selectedMilk: MilkSelectionProps | null;
-  setSelectedMilk: (milk: MilkSelectionProps | null) => void;
+  selectedMilk: Milk | null;
+  setSelectedMilk: (milk: Milk | null) => void;
 }) {
   return (
     <div className="milk-selection">
@@ -74,12 +57,12 @@ export default function MilkSelection({
       </div>
 
       <div className="selection mt-5 pl-5 flex flex-col gap-6 items-start">
-        {milkSelections.map((milk) => (
+        {milks.map((milk) => (
           <Button
             key={milk.id}
             type="button"
             variant={milk.color as "default"}
-            className={`rounded-full sm:text-base md:text-lg ${
+            className={`flex gap-2 rounded-full sm:text-base md:text-lg ${
               selectedMilk?.id === milk.id
                 ? "border-2 outline outline-white border-black"
                 : ""
@@ -89,7 +72,14 @@ export default function MilkSelection({
               setSelectedMilk(milk);
             }}
           >
-            {milk.name}
+            {milk.name}{" "}
+            <span className="font-mono">
+              {milk.additional_price
+                ? `(+${formatPrice(milk.additional_price, {
+                    withoutDecimals: true,
+                  })})`
+                : ""}
+            </span>
           </Button>
         ))}
       </div>

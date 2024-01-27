@@ -37,34 +37,34 @@ model Drink {
   id         String    @id @default(uuid())
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+  name       String
   color      Color?
   size       DrinkSize @default(ML_460)
-  price      Decimal
+  price      Float
 }
 
 model Milk {
-  id              String   @id @default(uuid())
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-  name            String
-  color           Color
-  additionalPrice Decimal?
+  id               String   @id @default(uuid())
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  name             String
+  color            Color
+  additional_price Float?
 }
 
 model Order {
   id                 String        @id @default(uuid())
-  ref                String       @unique
+  ref                String        @unique
   created_at         DateTime      @default(now())
   updated_at         DateTime      @updatedAt
   completed_at       DateTime?
   is_completed       Boolean       @default(false)
   status             Status        @default(TO_CONFIRM)
-  total_price        Decimal
+  total_price        Float
   total_items        Int
   customer_name      String?
   delivery_address   String
   landmark           String?
-  custom_request     String?
   claim_method       ClaimMethod   @default(DELIVERY)
   payment_method     PaymentMethod @default(GCASH)
   logged_in_customer User?         @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -75,13 +75,16 @@ model Order {
 }
 
 model OrderItem {
-  id       String  @id @default(uuid())
-  order    Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  order_id String
-  name     String
-  price    Decimal
-  quantity Int
-  size     String
+  id                    String  @id @default(uuid())
+  order                 Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id              String
+  name                  String
+  price                 Float
+  quantity              Int
+  size                  String
+  milk_name             String?
+  milk_additional_price Float?
+  custom_request        String?
 
   @@index([order_id])
 }

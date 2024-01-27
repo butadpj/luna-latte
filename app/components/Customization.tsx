@@ -1,59 +1,81 @@
 "use client";
 
-import DrinkSelection, { DrinkSelectionProps } from "./DrinkSelection";
-import MilkSelection, { MilkSelectionProps } from "./MilkSelection";
+import DrinkSelection from "./DrinkSelection";
+import MilkSelection from "./MilkSelection";
 import CustomRequest, { CustomRequestProps } from "./CustomRequest";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAddOrUpdate } from "@/shared/hooks";
 import Header from "./Header";
+import { DrinkSize, Milk, Drink } from "@prisma/client";
 
-export default function Customization() {
+export default function Customization({
+  drinks,
+  milks,
+}: {
+  drinks: Drink[];
+  milks: Milk[];
+}) {
   const router = useRouter();
-  const [selectedDrink, setSelectedDrink] =
-    useState<DrinkSelectionProps | null>(null);
-  const [selectedMilk, setSelectedMilk] = useState<MilkSelectionProps | null>(
-    null
-  );
+  const [selectedDrink, setSelectedDrink] = useState<Drink | null>(null);
+  const [selectedMilk, setSelectedMilk] = useState<Milk | null>(null);
   const [selectedRequest, setSelectedRequest] =
     useState<CustomRequestProps | null>(null);
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("460 ml");
+  const [selectedSize, setSelectedSize] = useState<DrinkSize>("ML_460");
 
   const step = useMemo(() => {
-    if (selectedMilk && !selectedRequest) return 2;
-    if (selectedRequest && selectedMilk) return 3;
-    return 1;
-  }, [selectedMilk, selectedRequest]);
+    if (selectedDrink?.name === "Iced americano") {
+      if (selectedRequest) return 3;
 
-  useEffect(() => {
-    if (selectedMilk === null) setSelectedRequest(null);
-  }, [selectedMilk, selectedRequest]);
-
-  const computePrice = () => {
-    if (selectedDrink) {
-      if (selectedMilk?.additionalPrice) {
-        return selectedDrink?.price + selectedMilk.additionalPrice;
-      }
-
-      return selectedDrink.price;
+      return 2;
     }
 
-    return 0;
+    if (selectedMilk && !selectedRequest) return 2;
+    if (selectedRequest && selectedMilk) return 3;
+
+    return 1;
+  }, [selectedMilk, selectedRequest, selectedDrink?.name]);
+
+  useEffect(() => {
+    if (selectedDrink?.name === "Iced americano")
+      //@ts-ignore
+      setSelectedMilk({ name: "N/A" });
+    else setSelectedMilk(null);
+  }, [selectedDrink?.name]);
+
+  useEffect(() => {
+    if (selectedMilk === null && selectedDrink?.name !== "Iced americano")
+      setSelectedRequest(null);
+  }, [selectedMilk, selectedRequest, selectedDrink?.name]);
+
+  const computePrice = () => {
+    if (!selectedDrink) {
+      throw new Error("Can't compute price without selecting a drink first");
+    }
+
+    if (selectedMilk?.additional_price) {
+      return selectedDrink.price + selectedMilk.additional_price;
+    }
+
+    return selectedDrink.price;
   };
 
   const addOrUpdate = useAddOrUpdate({
-    item: {
-      id: `drink-${selectedDrink?.id}-${selectedMilk?.id}-${selectedRequest?.message}-${selectedSize}`,
-      name: selectedDrink?.name || "",
-      milk: selectedMilk?.name || "",
-      custom_request: selectedRequest?.message || "",
-      quantity,
-      size: selectedSize || "",
-      price: computePrice(),
-      color: selectedDrink?.color || "",
-    },
+    item:
+      selectedDrink && selectedMilk && selectedRequest
+        ? {
+            id: `drink-${selectedDrink.id}-${selectedMilk?.id}-${selectedRequest.message}-${selectedSize}`,
+            name: selectedDrink.name,
+            milk: selectedMilk,
+            custom_request: selectedRequest.message,
+            quantity,
+            size: selectedSize || "",
+            price: selectedDrink.price,
+            color: selectedDrink.color,
+          }
+        : null,
     quantity,
   });
 
@@ -61,7 +83,12 @@ export default function Customization() {
     <div className="w-full max-w-xl flex flex-col items-center ">
       <Header>
         <Header.MainText />
-        <Header.Bottle step={step} selectedDrink={selectedDrink} showPrice />
+        <Header.Bottle
+          step={step}
+          selectedDrink={selectedDrink}
+          selectedMilk={selectedMilk}
+          showPrice
+        />
         <Header.ActionButtons
           step={step}
           quantity={quantity}
@@ -81,13 +108,15 @@ export default function Customization() {
 
       <div className="space-y-12 sm:text-lg md:text-xl pt-12 px-5">
         <DrinkSelection
+          drinks={drinks}
           selectedDrink={selectedDrink}
           setSelectedDrink={setSelectedDrink}
         />
         <MilkSelection
+          milks={milks}
           selectedMilk={selectedMilk}
           setSelectedMilk={setSelectedMilk}
-          isDisabled={!selectedDrink}
+          isDisabled={!selectedDrink || selectedDrink.name === "Iced americano"}
         />
         <CustomRequest
           selectedRequest={selectedRequest}

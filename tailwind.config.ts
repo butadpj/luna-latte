@@ -7,12 +7,12 @@ module.exports = {
     "./src/**/*.{ts,tsx}",
   ],
   safelist: [
-    "fill-green",
-    "fill-orange",
-    "fill-dark",
-    "fill-dark-brown",
-    "fill-light-brown",
-    "fill-light",
+    "fill-GREEN",
+    "fill-ORANGE",
+    "fill-DARK",
+    "fill-DARK_BROWN",
+    "fill-LIGHT_BROWN",
+    "fill-LIGHT",
   ],
   prefix: "",
   theme: {
@@ -25,14 +25,14 @@ module.exports = {
     },
     extend: {
       colors: {
-        dark: "#3c3b3c",
-        light: "#ffffff",
-        beige: "#ddb867",
-        sweet: "#ffe7dd",
-        "dark-brown": "#5b492f",
-        "light-brown": "#ac8561",
-        orange: "#f3bd1d",
-        green: "#568d2b",
+        DARK: "#3c3b3c",
+        LIGHT: "#ffffff",
+        BEIGE: "#ddb867",
+        SWEET: "#ffe7dd",
+        DARK_BROWN: "#5b492f",
+        LIGHT_BROWN: "#ac8561",
+        ORANGE: "#f3bd1d",
+        GREEN: "#568d2b",
       },
       keyframes: {
         "accordion-down": {
