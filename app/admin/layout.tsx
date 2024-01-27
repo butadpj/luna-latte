@@ -27,7 +27,7 @@ export default async function AdminLayout({
 }) {
   const user = await getCurrentUser();
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  if (!allowedRoles.includes(user?.role || "")) {
     redirect("/");
   }
 
