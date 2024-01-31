@@ -11,11 +11,11 @@ const variant = {
   ORANGE:
     "bg-ORANGE text-black hover:bg-ORANGE/90 dark:bg-ORANGE dark:hover:bg-ORANGE/90",
   CARAMEL:
-    "bg-CARAMEL text-black hover:bg-CARAMEL/90 dark:bg-CARAMEL dark:hover:bg-CARAMEL/90",
+    "bg-CARAMEL text-neutral-50 hover:bg-CARAMEL/90 dark:bg-CARAMEL dark:hover:bg-CARAMEL/90",
   GREEN:
     "bg-GREEN text-neutral-50 hover:bg-GREEN/90 dark:bg-GREEN dark:text-neutral-50 dark:hover:bg-GREEN/90",
   SWEET:
-    "bg-SWEET text-black hover:bg-SWEET/90 dark:bg-SWEET dark:hover:bg-SWEET/90",
+    "bg-SWEET text-neutral-50 hover:bg-SWEET/90 dark:bg-SWEET dark:hover:bg-SWEET/90",
   DARK_BROWN:
     "bg-DARK_BROWN text-neutral-50 hover:bg-DARK_BROWN/90 dark:bg-DARK_BROWN dark:text-neutral-50 dark:hover:bg-DARK_BROWN/90",
   LIGHT_BROWN:
