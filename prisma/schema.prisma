@@ -118,6 +118,7 @@ enum Colors {
   LIGHT_BROWN
   ORANGE
   GREEN
+  CARAMEL
 }
 
 enum ClaimMethods {
