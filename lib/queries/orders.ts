@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { getUserById } from "./users";
 import { CartItemProps } from "@/providers/CartProvider";
+import { displaySizeName } from "../utils";
 
 export async function createOrder({
   forLoggedInCustomer = false,
@@ -42,9 +43,10 @@ export async function createOrder({
         items: {
           create: items.map((item) => ({
             name: item.name,
-            price: item.price,
+            price: item.base_price,
             quantity: item.quantity,
-            size: item.size,
+            size_name: displaySizeName(item.size.name),
+            size_additional_price: item.size.additional_price,
             milk_name: item.milk.name,
             milk_additional_price: item.milk.additional_price,
             custom_request: item.custom_request,

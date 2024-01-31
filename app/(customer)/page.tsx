@@ -6,12 +6,14 @@ import Customization from "../components/Customization";
 import Footer from "@/shared/Footer";
 import { getAllDrinks } from "@/lib/queries/drinks";
 import { getAllMilks } from "@/lib/queries/milks";
+import { getAllSizes } from "@/lib/queries/sizes";
 
 const LOGO_SIZE = 150;
 
 export default async function Home() {
   const drinks = await getAllDrinks();
   const milks = await getAllMilks();
+  const sizes = await getAllSizes();
 
   return (
     <>
@@ -33,7 +35,7 @@ export default async function Home() {
           />
         </div>
 
-        <Customization drinks={drinks} milks={milks} />
+        <Customization sizes={sizes} drinks={drinks} milks={milks} />
       </main>
       <Footer />
     </>

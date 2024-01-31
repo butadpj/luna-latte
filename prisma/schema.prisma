@@ -34,13 +34,12 @@ enum Role {
 }
 
 model Drink {
-  id         String    @id @default(uuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  base_price Float
   name       String
-  color      Color?
-  size       DrinkSize @default(ML_460)
-  price      Float
+  color      Colors?
 }
 
 model Milk {
@@ -48,26 +47,34 @@ model Milk {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
   name             String
-  color            Color
+  color            Colors
+  additional_price Float?
+}
+
+model Size {
+  id               String   @id @default(uuid())
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  name             Sizes    @unique @default(ML_300)
   additional_price Float?
 }
 
 model Order {
-  id                 String        @id @default(uuid())
-  ref                String        @unique
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
+  id                 String         @id @default(uuid())
+  ref                String         @unique
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
   completed_at       DateTime?
-  is_completed       Boolean       @default(false)
-  status             Status        @default(TO_CONFIRM)
+  is_completed       Boolean        @default(false)
+  status             Statuses       @default(TO_CONFIRM)
   total_price        Float
   total_items        Int
   customer_name      String?
   delivery_address   String
   landmark           String?
-  claim_method       ClaimMethod   @default(DELIVERY)
-  payment_method     PaymentMethod @default(GCASH)
-  logged_in_customer User?         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  claim_method       ClaimMethods   @default(DELIVERY)
+  payment_method     PaymentMethods @default(GCASH)
+  logged_in_customer User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id            String?
   items              OrderItem[]
 
@@ -81,7 +88,8 @@ model OrderItem {
   name                  String
   price                 Float
   quantity              Int
-  size                  String
+  size_name             String
+  size_additional_price Float?
   milk_name             String?
   milk_additional_price Float?
   custom_request        String?
@@ -89,18 +97,19 @@ model OrderItem {
   @@index([order_id])
 }
 
-enum Status {
+enum Statuses {
   TO_CONFIRM
   PREPARING
   TO_DELIVER
   DELIVERED
 }
 
-enum DrinkSize {
-  ML_460
+enum Sizes {
+  ML_300
+  ML_400
 }
 
-enum Color {
+enum Colors {
   DARK
   LIGHT
   BEIGE
@@ -111,12 +120,12 @@ enum Color {
   GREEN
 }
 
-enum ClaimMethod {
+enum ClaimMethods {
   DELIVERY
   // PICK_UP
 }
 
-enum PaymentMethod {
+enum PaymentMethods {
   GCASH
   BANK_TRANSFER
   // COD

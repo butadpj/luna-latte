@@ -25,7 +25,7 @@ export function useAddOrUpdate({
         addToCart({
           id: item.id,
           name: item.name,
-          price: item.price,
+          base_price: item.base_price,
           quantity: quantity,
           size: item.size,
           color: item.color,

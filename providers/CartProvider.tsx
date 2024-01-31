@@ -2,12 +2,14 @@
 
 import { createContext, useEffect, useMemo, useState } from "react";
 import { getLocalStorageItem, setLocalStorageItem } from "@/lib/utils";
-import { $Enums, Drink, Milk, Prisma } from "@prisma/client";
+import { $Enums, Drink, Milk, Size } from "@prisma/client";
 
 type Modify<T, R> = Omit<T, keyof R> & R;
 
 interface CartItemMilk
   extends Omit<Milk, "id" | "created_at" | "updated_at" | "color"> {}
+
+interface CartItemSIze extends Omit<Size, "id" | "created_at" | "updated_at"> {}
 
 export interface CartItemProps
   extends Modify<
@@ -16,16 +18,16 @@ export interface CartItemProps
       quantity: number;
       milk: CartItemMilk;
       custom_request: string;
+      size: CartItemSIze;
     }
   > {}
 
 interface CartItemUpdateProps
   extends Modify<
-    Omit<CartItemProps, "id">,
+    Omit<CartItemProps, "id" | "base_price">,
     {
-      color?: $Enums.Color;
-      price?: number;
-      size?: $Enums.DrinkSize;
+      color?: $Enums.Colors;
+      size?: Size;
       name?: string;
       milk?: Milk;
       custom_request?: string;
@@ -81,7 +83,10 @@ export default function CartProvider({
       total_amount: cart.cartItems.reduce(
         (total, item) =>
           total +
-          (item.price + (item.milk.additional_price || 0)) * item.quantity,
+          (item.base_price +
+            (item.size.additional_price || 0) +
+            (item.milk.additional_price || 0)) *
+            item.quantity,
         0
       ),
     };

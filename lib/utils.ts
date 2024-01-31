@@ -73,3 +73,17 @@ export function getFullAddress(address: {
 
   return null;
 }
+
+export function extractNumberFromString(text: string) {
+  const matched = text.match(/\d+/);
+
+  if (!matched?.length)
+    throw new Error("Can't find any number from the given text");
+
+  const number = parseInt(matched[0], 10);
+  return isNaN(number) ? null : number;
+}
+
+export function displaySizeName(sizeName: string) {
+  return `${extractNumberFromString(sizeName)} ml`;
+}

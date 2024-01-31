@@ -6,8 +6,8 @@ import { ArrowRightIcon, MinusIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { twMerge } from "tailwind-merge";
-import { formatPrice } from "@/lib/utils";
-import { Drink, DrinkSize, Milk } from "@prisma/client";
+import { displaySizeName, formatPrice } from "@/lib/utils";
+import { Drink, Milk, Size } from "@prisma/client";
 
 export default function Header({
   children,
@@ -53,11 +53,13 @@ export function Bottle({
   step,
   selectedDrink = null,
   selectedMilk = null,
+  selectedSize,
   showPrice = false,
 }: {
   step: number | undefined;
   selectedDrink: Drink | null;
   selectedMilk: Milk | null;
+  selectedSize: Size;
   showPrice?: boolean;
 }) {
   if (!step) throw new Error("props 'step' needs to be defined");
@@ -94,9 +96,13 @@ export function Bottle({
               : ""
           )}
         >
-          {`${formatPrice(selectedDrink?.price || 0, {
-            withoutDecimals: true,
-          })} ${
+          {`${formatPrice(
+            (selectedDrink?.base_price || 0) +
+              (selectedSize.additional_price || 0),
+            {
+              withoutDecimals: true,
+            }
+          )} ${
             selectedMilk?.additional_price
               ? `+ ${formatPrice(selectedMilk?.additional_price || 0, {
                   withoutDecimals: true,
@@ -110,6 +116,7 @@ export function Bottle({
 }
 
 export function ActionButtons({
+  sizes,
   step,
   quantity,
   selectedDrinkColor,
@@ -118,12 +125,13 @@ export function ActionButtons({
   setSelectedSize,
   onClickContinue,
 }: {
+  sizes: Size[];
   step: number | undefined;
   quantity: number;
   selectedDrinkColor: string | undefined | null;
   setQuantity: Dispatch<SetStateAction<number>>;
-  selectedSize: string;
-  setSelectedSize: Dispatch<SetStateAction<DrinkSize>>;
+  selectedSize: Size;
+  setSelectedSize: Dispatch<SetStateAction<Size>>;
   onClickContinue: () => void;
 }) {
   return step === 3 ? (
@@ -157,12 +165,15 @@ export function ActionButtons({
           <label>Size: </label>
           <select
             className="bg-transparent"
-            value={selectedSize}
+            value={selectedSize.id}
             onChange={(e) => {
-              setSelectedSize(e.target.value as DrinkSize);
+              const found = sizes.find((size) => size.id === e.target.value);
+              if (found) setSelectedSize(found);
             }}
           >
-            <option value={"ML_460"}>460 ml</option>
+            {sizes.map((size) => (
+              <option value={size.id}>{displaySizeName(size.name)}</option>
+            ))}
           </select>
         </div>
       </div>

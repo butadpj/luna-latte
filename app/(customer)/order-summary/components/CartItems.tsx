@@ -1,5 +1,5 @@
 import { Separator } from "@/shared/ui/separator";
-import { formatPrice } from "@/lib/utils";
+import { displaySizeName, formatPrice } from "@/lib/utils";
 import { CartContext } from "@/providers/CartProvider";
 import BottleSVG from "@/shared/BottleSVG";
 import { Button } from "@/shared/ui/button";
@@ -26,7 +26,9 @@ export default function CartItems() {
             <div className="flex items-center justify-between">
               <div className="font-bold flex text-lg items-center gap-2 mb-2">
                 - {item.name}{" "}
-                {`(${formatPrice(item.price)}${
+                {`(${formatPrice(
+                  item.base_price + (item.size.additional_price || 0)
+                )}${
                   item.milk.additional_price
                     ? ` + ${formatPrice(item.milk.additional_price, {
                         withoutDecimals: true,
@@ -71,7 +73,7 @@ export default function CartItems() {
               <div>
                 <label>Size:</label>{" "}
                 <span className="underline underline-offset-2">
-                  {item.size}
+                  {displaySizeName(item.size.name)}
                 </span>
               </div>
               <div className="flex items-center">
@@ -115,7 +117,9 @@ export default function CartItems() {
                 <label>Final price:</label>{" "}
                 <span className="underline underline-offset-2">
                   {formatPrice(
-                    (item.price + (item.milk.additional_price || 0)) *
+                    (item.base_price +
+                      (item.size.additional_price || 0) +
+                      (item.milk.additional_price || 0)) *
                       item.quantity
                   )}
                 </span>
