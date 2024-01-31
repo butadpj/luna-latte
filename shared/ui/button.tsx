@@ -10,6 +10,8 @@ const variant = {
     "bg-BEIGE text-neutral-50 hover:bg-BEIGE/90 dark:bg-BEIGE dark:text-neutral-50 dark:hover:bg-BEIGE/90",
   ORANGE:
     "bg-ORANGE text-black hover:bg-ORANGE/90 dark:bg-ORANGE dark:hover:bg-ORANGE/90",
+  CARAMEL:
+    "bg-CARAMEL text-black hover:bg-CARAMEL/90 dark:bg-CARAMEL dark:hover:bg-CARAMEL/90",
   GREEN:
     "bg-GREEN text-neutral-50 hover:bg-GREEN/90 dark:bg-GREEN dark:text-neutral-50 dark:hover:bg-GREEN/90",
   SWEET:
