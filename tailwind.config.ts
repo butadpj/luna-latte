@@ -33,7 +33,7 @@ module.exports = {
         LIGHT_BROWN: "#ac8561",
         ORANGE: "#f3bd1d",
         GREEN: "#568d2b",
-        CAREMEL: "#B26F51",
+        CARAMEL: "#B26F51",
       },
       keyframes: {
         "accordion-down": {
