@@ -2,6 +2,7 @@
 
 import { getOrderByRef } from "@/lib/queries/orders";
 import { formatPrice } from "@/lib/utils";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -37,12 +38,19 @@ export async function GET(req: NextRequest, res: NextResponse) {
 export async function POST(request: Request) {
   try {
     const text = await request.text();
+
     console.log(JSON.parse(text).entry[0].messaging[0]);
-    const { sender: recipient, optin } = JSON.parse(text).entry[0].messaging[0];
+    const {
+      sender: recipient,
+      optin,
+      message,
+    } = JSON.parse(text).entry[0].messaging[0];
 
     const orderRef = optin?.ref;
+    const quickReply = message?.quick_reply;
 
     if (orderRef) {
+      console.log("ORDER OPTIN");
       setTimeout(async () => {
         const order = await getOrderByRef(orderRef);
 
@@ -108,7 +116,7 @@ Payment option: ${order?.payment_method}
             {
               content_type: "text",
               title: "Confirm",
-              payload: { status: "CONFIRMED", ref: orderRef },
+              payload: orderRef,
               // image_url: "",
             },
           ],
@@ -128,9 +136,32 @@ Payment option: ${order?.payment_method}
         ).json();
 
         console.log("RES: ", response);
+
+        return new Response("Order confirmation sent to customer!", {
+          status: 200,
+        });
       }, 2000);
     }
 
+    if (quickReply) {
+      const orderRef = quickReply.payload;
+
+      const headersList = headers();
+
+      const host = headersList.get("host");
+
+      console.log(`${host}/gcash-QRs/89.png`);
+
+      console.log(`SET THE STATUS OF THIS ORDER - ${orderRef} to "CONFIRMED"`);
+      // prisma?.order.update({
+      //   where: {
+      //     ref: orderRef,
+      //   },
+      //   data: {
+      //     status:
+      //   }
+      // });
+    }
     // Process the webhook payload
   } catch (error) {
     return new Response(`Webhook error: ${error.message}`, {

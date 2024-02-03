@@ -65,7 +65,7 @@ model Order {
   created_at         DateTime       @default(now())
   updated_at         DateTime       @updatedAt
   completed_at       DateTime?
-  is_completed       Boolean        @default(false)
+  is_paid            Boolean        @default(false)
   status             Statuses       @default(TO_CONFIRM)
   total_price        Float
   total_items        Int
@@ -99,6 +99,7 @@ model OrderItem {
 
 enum Statuses {
   TO_CONFIRM
+  WAITING_FOR_PAYMENT
   PREPARING
   TO_DELIVER
   DELIVERED

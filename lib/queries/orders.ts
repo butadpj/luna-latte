@@ -40,6 +40,7 @@ export async function createOrder({
     const createdOrder = await prisma.order.create({
       data: {
         ...details,
+
         items: {
           create: items.map((item) => ({
             name: item.name,
