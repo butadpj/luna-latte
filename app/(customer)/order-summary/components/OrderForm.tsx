@@ -1,29 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFormState } from "react-hook-form";
+import { UseFormReturn, useForm, useFormState } from "react-hook-form";
 import * as z from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
+import { Form } from "@/shared/ui/form";
 import { toast } from "@/shared/ui/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select";
-import { Label } from "@/shared/ui/label";
-import cities from "@/lib/cities";
 import SendToMessenger from "@/shared/SendToMessenger";
 import Link from "next/link";
 import { getFullAddress } from "@/lib/utils";
@@ -31,6 +13,24 @@ import { useCurrentUser } from "@/shared/hooks";
 import { createOrderAction } from "../action";
 import { useContext } from "react";
 import { CartContext } from "@/providers/CartProvider";
+import { Address, ClaimMethod, Name, PaymentMethod } from "./Fields";
+
+export type FormType = UseFormReturn<
+  {
+    name: string;
+    claim_method: "DELIVERY";
+    address: {
+      street: string;
+      city: string;
+      landmark: string;
+      barangay?: string | undefined;
+      province?: string | undefined;
+    };
+    payment_method: "GCASH" | "BANK_TRANSFER";
+  },
+  any,
+  undefined
+>;
 
 export default function OrderForm({}: {}) {
   const { user, isLoading } = useCurrentUser();
@@ -55,18 +55,6 @@ export default function OrderForm({}: {}) {
     payment_method: z.enum(["GCASH", "BANK_TRANSFER"]),
   });
 
-  const validCities = cities
-    .filter((city) => city.province === "MM" || city.province === "RIZ")
-    .sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     values: {
@@ -86,24 +74,8 @@ export default function OrderForm({}: {}) {
       keepErrors: true,
     },
   });
+
   const watchClaimMethod = form.watch("claim_method");
-
-  const getProvinceFromSelectedCity = (selectedCity = "") => {
-    const foundCity = validCities.find((city) => city.name === selectedCity);
-
-    if (foundCity) {
-      switch (foundCity.province) {
-        case "RIZ":
-          return "Rizal";
-        case "MM":
-          return "Metro Manila";
-        default:
-          return "Rizal";
-      }
-    }
-
-    return undefined;
-  };
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
@@ -124,190 +96,12 @@ export default function OrderForm({}: {}) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
         <div className="py-4 px-6 space-y-5">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-start">
-                <FormLabel>
-                  Name<span className="text-red-500">*</span>:{" "}
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Juan" {...field} />
-                </FormControl>
-                {/* <FormDescription className="text-xs">
-                  We would like to know you!
-                </FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="claim_method"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-start">
-                <FormLabel>Claim method</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="DELIVERY">Delivery</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription className="text-xs">
-                  How would you like to get your drinks?
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {watchClaimMethod === "DELIVERY" ? (
-            <div className="flex flex-col items-start">
-              <Label className="mb-2">Address</Label>
-              <div className="fields w-full space-y-2">
-                <FormField
-                  control={form.control}
-                  name={"address.street"}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="font-light text-xs">
-                        Street<span className="text-red-500">*</span>:
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Sampaguita St." {...field} />
-                      </FormControl>
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={"address.barangay"}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="font-light text-left text-xs">
-                        Barangay (optional):
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Bagong Nayon" {...field} />
-                      </FormControl>
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={"address.city"}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="font-light text-xs">
-                        City<span className="text-red-500">*</span>:
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            form.setValue(
-                              "address.province",
-                              getProvinceFromSelectedCity(value)
-                            );
-                          }}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {validCities.map((city) => (
-                              <SelectItem key={city.name} value={city.name}>
-                                {city.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={"address.province"}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="font-light text-xs">
-                        Province:{" "}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled
-                          placeholder="This will be auto selected"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={"address.landmark"}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="font-light text-xs">
-                        Landmark<span className="text-red-500">*</span>:{" "}
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Juan Store" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          <FormField
-            control={form.control}
-            name="payment_method"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-start">
-                <FormLabel>Payment method</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Cash on Delivery (COD)" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {/* <SelectItem value="cod">Cash on Delivery (COD)</SelectItem> */}
-                      <SelectItem value="GCASH">Gcash</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                {/* <FormDescription>Up to you!</FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Name form={form} />
+          <ClaimMethod form={form} />
+          {watchClaimMethod === "DELIVERY" ? <Address form={form} /> : null}
+          <PaymentMethod form={form} />
         </div>
-        <div className="bg-LIGHT px-5 py-2">
+        <div className="bg-LIGHT px-5 py-2 text-left">
           <SendToMessenger
             className={`${
               isValid && !isValidating
@@ -332,8 +126,6 @@ export default function OrderForm({}: {}) {
               // Save order in database to fetch it from webhook endpoint
               const { name, address, claim_method, payment_method } =
                 form.getValues();
-
-              console.log("Order ref: ", ref);
 
               const createdOrder = await createOrderAction({
                 details: {

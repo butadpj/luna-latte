@@ -15,7 +15,7 @@ import OrderModal from "./OrderModal";
 export default function Summary() {
   const { cart, removeAllCartItems } = useContext(CartContext);
 
-  const [showConfirmOrderModal, setShowConfirmOrderModal] = useState(false);
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   if (cart.status === "LOADING")
     return (
@@ -27,11 +27,11 @@ export default function Summary() {
   return (
     <>
       <OrderModal
-        isOpen={showConfirmOrderModal}
+        isOpen={showOrderForm}
         onOpenChange={(open) => {
           if (!open) {
             window.location.reload();
-          } else setShowConfirmOrderModal(true);
+          } else setShowOrderForm(true);
         }}
       />
 
@@ -71,10 +71,10 @@ export default function Summary() {
                 variant={"ORANGE"}
                 size={"sm"}
                 onClick={() => {
-                  setShowConfirmOrderModal(true);
+                  setShowOrderForm(true);
                 }}
               >
-                Confirm order
+                Proceed
               </Button>
             </div>
           </div>
