@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { Prisma } from "@prisma/client";
+import { Order, Prisma, Statuses } from "@prisma/client";
 import { getUserById } from "./users";
 import { CartItemProps } from "@/providers/CartProvider";
 import { displaySizeName } from "../utils";
@@ -75,6 +75,24 @@ export async function getOrderByRef(ref: string) {
     });
 
     return order;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function updateOrderStatus(orderRef: string, status: Statuses) {
+  try {
+    const updatedOrder = await prisma.order.update({
+      where: {
+        ref: orderRef,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return updatedOrder;
   } catch (error) {
     console.error(error);
     throw error;

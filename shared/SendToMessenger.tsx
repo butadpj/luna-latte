@@ -15,12 +15,24 @@ export default function SendToMessenger({
   onOptIn: (ref: string) => void;
 }) {
   useEffect(() => {
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "//connect.facebook.net/en_US/messenger.Extensions.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "Messenger");
+
     window.fbAsyncInit = function () {
       const handler = (e) => {
         const { event, ref } = e;
 
         if (event === "clicked") {
-          onClickButton();
+          onClickButton && onClickButton();
         } else if (event === "opt_in") {
           onOptIn(ref);
         }
@@ -29,7 +41,7 @@ export default function SendToMessenger({
       FB.init({
         appId: "7255615124546099",
         xfbml: true,
-        version: "v18.0",
+        version: "v19.0",
       });
 
       FB.Event.subscribe("send_to_messenger", handler);
@@ -52,6 +64,11 @@ export default function SendToMessenger({
 
       return () => FB.Event.unsubscribe("send_to_messenger", handler);
     };
+
+    window.extAsyncInit = function () {
+      // the Messenger Extensions JS SDK is done loading
+      console.log("MESSENGER SDK LOADED");
+    };
   });
 
   return (
@@ -66,7 +83,7 @@ export default function SendToMessenger({
         cta_text="GET_STARTED"
       ></div>
       <Script
-        strategy={"afterInteractive"}
+        defer
         crossOrigin="anonymous"
         src="https://connect.facebook.net/en_US/sdk.js"
       ></Script>

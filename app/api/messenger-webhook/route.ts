@@ -1,7 +1,8 @@
 //@ts-nocheck
 
-import { getOrderByRef } from "@/lib/queries/orders";
-import { formatPrice } from "@/lib/utils";
+import { getOrderByRef, updateOrderStatus } from "@/lib/queries/orders";
+import { Message, formatDate, formatPrice, sendMessageApi } from "@/lib/utils";
+import { redirect } from "next/dist/server/api-utils";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -44,124 +45,289 @@ export async function POST(request: Request) {
       sender: recipient,
       optin,
       message,
+      postback,
     } = JSON.parse(text).entry[0].messaging[0];
 
     const orderRef = optin?.ref;
     const quickReply = message?.quick_reply;
 
-    if (orderRef) {
-      console.log("ORDER OPTIN");
-      setTimeout(async () => {
-        const order = await getOrderByRef(orderRef);
+    const typingOn = async () => {
+      const res = await sendMessageApi({
+        sender_action: "typing_on",
+        recipientId: recipient.id,
+      });
 
-        const items = order?.items.map((item) => ({
-          title: item.name,
-          subtitle: `Milk: Regular; Request: Nothing, I'm good!`,
-          quantity: item.quantity,
-          currency: "PHP",
-          price: item.price,
-          image_url: "http://originalcoastclothing.com/img/whiteshirt.png",
-        }));
+      console.log("SENDER ACTION RES: ", res);
+    };
 
-        const template = {
+    const typingOff = async () => {
+      const res = await sendMessageApi({
+        sender_action: "typing_off",
+        recipientId: recipient.id,
+      });
+
+      console.log("SENDER ACTION RES: ", res);
+    };
+
+    const sendMenu = async () => {
+      await typingOn();
+
+      const imageUrl = `https://www.luna-latte.cafe/menu.png`;
+
+      const sendAttachmentResponse = await sendMessageApi({
+        message: {
+          attachment: {
+            type: "image",
+            payload: { url: imageUrl, is_reusable: true },
+          },
+        },
+        messagingType: "RESPONSE",
+        recipientId: recipient.id,
+      });
+      console.log("SEND ATTACHMENT RES: ", sendAttachmentResponse);
+
+      const sendOrderButtonResponse = await sendMessageApi({
+        message: {
           attachment: {
             type: "template",
             payload: {
-              template_type: "receipt",
-              recipient_name: order?.customer_name,
-              order_number: order?.id,
-              currency: "PHP",
-              payment_method: order?.payment_method,
-              order_url: "http://luna-latte.vercel.app",
-              timestamp: parseInt(new Date(order?.created_at).getTime() / 1000),
-              summary: {
-                subtotal: order?.total_price,
-                shipping_cost: 50,
-                total_cost: order?.total_price + 50,
-              },
-              // adjustments: [
-              //   {
-              //     name: "New Customer Discount",
-              //     amount: 20,
-              //   },
-              //   {
-              //     name: "$10 Off Coupon",
-              //     amount: 10,
-              //   },
-              // ],
-              elements: items,
+              template_type: "button",
+              text: "Don't limit yourself with what you see on our menu. You can also customize your coffee to match your personal taste 👌",
+              buttons: [
+                {
+                  type: "web_url",
+                  url: `https://de18-136-158-11-115.ngrok-free.app/?recipient_id=${recipient.id}`,
+                  title: "ORDER NOW",
+                  webview_height_ratio: "full",
+                  messenger_extensions: true,
+                },
+              ],
             },
           },
-        };
+        },
+        messagingType: "RESPONSE",
+        recipientId: recipient.id,
+      });
+      console.log("SEND TEXT RES: ", sendOrderButtonResponse);
 
-        const message = {
-          text: `Hello ${
-            order?.customer_name
-          }! Pa confirm na lang po ng order details para ma-book po namin thru Lalamove yung order niyo : )
+      await typingOff();
 
-Delivery details:
-Name: ${order?.customer_name}
-Address : ${order?.delivery_address}
-Nearest land mark: ${order?.landmark}
+      return new Response("Menu sent!", {
+        status: 200,
+      });
+    };
 
-Orders: 
-${order?.items.map(
-  (item) => `- ${item.name} (${formatPrice(item.price)} | x${item.quantity})\n`
-)}
+    if (message?.text === "Can I see  your menu?") {
+      sendMenu();
+    }
 
-Subtotal: ${formatPrice(order?.total_price)}
-Payment option: ${order?.payment_method}
-`,
-          quick_replies: [
-            {
-              content_type: "text",
-              title: "Confirm",
-              payload: orderRef,
-              // image_url: "",
-            },
-          ],
-        };
+    if (orderRef) {
+      console.log("GET STARTED");
 
-        const response = await (
-          await fetch(
-            `https://graph.facebook.com/v18.0/155078761029891/messages?recipient={'id': ${
-              recipient.id
-            }}&messaging_type=UPDATE&message=${JSON.stringify(
-              message
-            )}&access_token=${process.env.PAGES_ACCESS_TOKEN}`,
-            {
-              method: "POST",
-            }
-          )
-        ).json();
+      const sendTextResponse = await sendMessageApi({
+        message: {
+          text: "Hi ka-Luna! 👋 Start sending a message or click something from the menu to start the interaction",
+        },
+        messagingType: "RESPONSE",
+        recipientId: recipient.id,
+      });
 
-        console.log("RES: ", response);
+      console.log("SENT TEXT RES: ", sendTextResponse);
 
-        return new Response("Order confirmation sent to customer!", {
-          status: 200,
-        });
-      }, 2000);
+      //       setTimeout(async () => {
+      //         try {
+      //           const order = await getOrderByRef(orderRef);
+
+      //           if (!order)
+      //             throw new Error(`Can't find the order with a ref of: ${orderRef}`);
+
+      //           const message: Message = {
+      //             text: `Hello ${
+      //               order.customer_name
+      //             }! Pa confirm na lang po ng order details, to proceed sa order niyo.
+
+      // Delivery details:
+      // Name: ${order.customer_name}
+      // Address : ${order.delivery_address}
+      // Nearest land mark: ${order.landmark}
+
+      // Orders:
+      // ${order.items.map(
+      //   (item) =>
+      //     `- ${item.name} (${formatPrice(
+      //       item.price + (item.milk_additional_price || 0)
+      //     )} | x${item.quantity})\n`
+      // )}
+
+      // Subtotal: ${formatPrice(order.total_price)} + (Shipping Fee)
+      // Payment option: ${order.payment_method}
+      // `,
+      //             quick_replies: [
+      //               {
+      //                 content_type: "text",
+      //                 title: "Confirm",
+      //                 payload: orderRef,
+      //                 // image_url: "",
+      //               },
+      //             ],
+      //           };
+
+      //           const response = await sendMessageApi({
+      //             message,
+      //             messagingType: "UPDATE",
+      //             recipientId: recipient.id,
+      //           });
+
+      //           console.log("RES: ", response);
+
+      //           return new Response("Order confirmation sent to customer!", {
+      //             status: 200,
+      //           });
+      //         } catch (error) {
+      //           console.error(error);
+      //           return new Response(`${error.message}`, {
+      //             status: 500,
+      //           });
+      //         }
+      //       }, 2000);
     }
 
     if (quickReply) {
       const orderRef = quickReply.payload;
 
-      const headersList = headers();
+      if (message.text === "Confirm") {
+        // const headersList = headers();
+        // const host = headersList.get("host");
+        const order = await getOrderByRef(orderRef);
 
-      const host = headersList.get("host");
+        await updateOrderStatus(order.ref, "WAITING_FOR_PAYMENT");
 
-      console.log(`${host}/gcash-QRs/89.png`);
+        const sendPaymentInstruction = async () => {
+          const sendTextResponse = await sendMessageApi({
+            message: {
+              text: `Order confirmed. Pa-send na lang po ng payment and we will prepare your order right after.
 
-      console.log(`SET THE STATUS OF THIS ORDER - ${orderRef} to "CONFIRMED"`);
-      // prisma?.order.update({
-      //   where: {
-      //     ref: orderRef,
-      //   },
-      //   data: {
-      //     status:
-      //   }
-      // });
+‼Strictly no COD transactions‼️
+
+${
+  order?.payment_method === "GCASH" &&
+  `Gcash
+0909 195 7066`
+} 
+`,
+            },
+            messagingType: "RESPONSE",
+            recipientId: recipient.id,
+          });
+          console.log("SEND TEXT RES: ", sendTextResponse);
+        };
+        const sendGcashQR = async () => {
+          const imageUrl = `https://www.luna-latte.cafe/gcash-QRs/luna-latte.png`;
+
+          const sendAttachmentResponse = await sendMessageApi({
+            message: {
+              attachment: {
+                type: "image",
+                payload: { url: imageUrl, is_reusable: false },
+              },
+              quick_replies: [
+                {
+                  content_type: "text",
+                  title: "Payment sent",
+                  payload: orderRef,
+                  // image_url: "",
+                },
+              ],
+            },
+            messagingType: "RESPONSE",
+            recipientId: recipient.id,
+          });
+
+          console.log("SEND ATTACHMENT RES: ", sendAttachmentResponse);
+        };
+
+        await sendPaymentInstruction();
+        if (order?.payment_method === "GCASH") await sendGcashQR();
+
+        return new Response("Payment option sent to customer!", {
+          status: 200,
+        });
+      }
+
+      if (message.text === "Payment sent") {
+        await sendMessageApi({
+          message: {
+            attachment: {
+              type: "template",
+              payload: {
+                template_type: "button",
+                text: `Thank you sa suporta Gar! 
+Sit back and relax lang while we prepare your order. Meanwhile, you can track your order by clicking the button below : )
+`,
+                buttons: [
+                  {
+                    type: "postback",
+                    title: "Track my order",
+                    payload: orderRef,
+                  },
+                ],
+              },
+            },
+          },
+          messagingType: "RESPONSE",
+          recipientId: recipient.id,
+        });
+
+        return new Response(
+          "Payment sent by a customer needs to be confirmed!",
+          {
+            status: 200,
+          }
+        );
+      }
     }
+
+    if (postback) {
+      const orderRef = postback.payload;
+
+      if (postback.title === "Track my order") {
+        const order = await getOrderByRef(orderRef);
+
+        const sendTextResponse = await sendMessageApi({
+          message: {
+            text: `Order ID: ${order.id}
+Placed at: ${formatDate(order?.created_at)}
+Status: ${order.status}
+
+Orders: 
+${order.items.map(
+  (item) => `- ${item.name} (${formatPrice(item.price)} | x${item.quantity})\n`
+)}
+`,
+            quick_replies: [
+              {
+                content_type: "text",
+                title: "Track my order",
+                payload: orderRef,
+                // image_url: "",
+              },
+            ],
+          },
+          messagingType: "RESPONSE",
+          recipientId: recipient.id,
+        });
+        console.log("SEND TEXT RES: ", sendTextResponse);
+
+        return new Response("Track customer order!", {
+          status: 200,
+        });
+      }
+
+      if (postback.title === "Can I see your menu?") {
+        sendMenu();
+      }
+    }
+
     // Process the webhook payload
   } catch (error) {
     return new Response(`Webhook error: ${error.message}`, {

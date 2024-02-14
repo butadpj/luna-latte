@@ -14,6 +14,7 @@ import { createOrderAction } from "../action";
 import { useContext } from "react";
 import { CartContext } from "@/providers/CartProvider";
 import { Address, ClaimMethod, Name, PaymentMethod } from "./Fields";
+import { Button } from "@/shared/ui/button";
 
 export type FormType = UseFormReturn<
   {
@@ -77,51 +78,37 @@ export default function OrderForm({}: {}) {
 
   const watchClaimMethod = form.watch("claim_method");
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-
-    // setLocalStorageItem("order", data);
-  }
+  function onSubmit(data: z.infer<typeof FormSchema>) {}
 
   const { isValid, isValidating } = useFormState({ control: form.control });
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-        <div className="py-4 px-6 space-y-5">
+        <div className="pt-4 px-6 space-y-5">
           <Name form={form} />
           <ClaimMethod form={form} />
           {watchClaimMethod === "DELIVERY" ? <Address form={form} /> : null}
           <PaymentMethod form={form} />
         </div>
-        <div className="bg-LIGHT px-5 py-2 text-left">
-          <SendToMessenger
+        <div className="px-5 pt-2 pb-10 text-left">
+          <Button
+            variant={"default"}
+            className={`w-full my-2 ${
+              isValid && !isValidating
+                ? "opacity-100 pointer-events-auto cursor-pointer"
+                : "opacity-30 pointer-events-none cursor-not-allowed"
+            }`}
+          >
+            SUBMIT
+          </Button>
+          {/* <SendToMessenger
             className={`${
               isValid && !isValidating
                 ? "opacity-100 pointer-events-auto cursor-pointer"
                 : "opacity-30 pointer-events-none cursor-not-allowed"
             }`}
-            onClickButton={async () => {
-              const data = form.getValues();
-
-              toast({
-                title: "You submitted the following values:",
-                description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                      {JSON.stringify(data, null, 2)}
-                    </code>
-                  </pre>
-                ),
-              });
-            }}
+            onClickButton={async () => {}}
             onOptIn={async (ref) => {
               // Save order in database to fetch it from webhook endpoint
               const { name, address, claim_method, payment_method } =
@@ -143,17 +130,17 @@ export default function OrderForm({}: {}) {
 
               if (createdOrder) window.location.reload();
             }}
-          />
-          <div className="text-DARK text-sm italic mt-1 text-left">
+          /> */}
+          <div className="text-sm italic mt-1 text-left">
             You will receive a message from{" "}
             <Link
               target="_blank"
               href="https://www.facebook.com/lunalatteph"
               className="underline"
             >
-              Luna Latte FB page
+              our FB page
             </Link>{" "}
-            for order confirmation. Thank you and stay caffienated!
+            after submitting your order. Thank you and stay caffienated!
           </div>
         </div>
       </form>
