@@ -52,11 +52,6 @@ export default function SendToMessenger({
 
       return () => FB.Event.unsubscribe("send_to_messenger", handler);
     };
-
-    window.extAsyncInit = function () {
-      // the Messenger Extensions JS SDK is done loading
-      console.log("MESSENGER SDK LOADED");
-    };
   });
 
   return (
