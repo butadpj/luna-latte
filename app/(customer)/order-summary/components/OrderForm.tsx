@@ -88,7 +88,7 @@ export default function OrderForm({}: {}) {
     //   ),
     // });
 
-    const createdOrder = await createOrderAction({
+    await createOrderAction({
       details: {
         ref: String(getLocalStorageItem("recipient_id")),
         customer_name: name,
@@ -101,19 +101,6 @@ export default function OrderForm({}: {}) {
       },
       items: cart.cartItems,
     });
-
-    if (createdOrder) {
-      MessengerExtensions.requestCloseBrowser(
-        function success() {
-          // webview closed
-          console.log("WEBVIEW CLOSED");
-        },
-        function error(err) {
-          // an error occurred
-          console.log("ERROR CLOSING WEBVIEW", error);
-        }
-      );
-    }
   }
 
   const { isValid, isValidating } = useFormState({ control: form.control });
