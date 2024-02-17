@@ -5,16 +5,15 @@ import { UseFormReturn, useForm, useFormState } from "react-hook-form";
 import * as z from "zod";
 
 import { Form } from "@/shared/ui/form";
-import { toast } from "@/shared/ui/use-toast";
-import SendToMessenger from "@/shared/SendToMessenger";
 import Link from "next/link";
-import { getFullAddress } from "@/lib/utils";
+import { getFullAddress, getLocalStorageItem } from "@/lib/utils";
 import { useCurrentUser } from "@/shared/hooks";
 import { createOrderAction } from "../action";
 import { useContext } from "react";
 import { CartContext } from "@/providers/CartProvider";
 import { Address, ClaimMethod, Name, PaymentMethod } from "./Fields";
 import { Button } from "@/shared/ui/button";
+import { redirect } from "next/navigation";
 
 export type FormType = UseFormReturn<
   {
@@ -78,7 +77,44 @@ export default function OrderForm({}: {}) {
 
   const watchClaimMethod = form.watch("claim_method");
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const { name, address, claim_method, payment_method } = data;
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
+
+    const createdOrder = await createOrderAction({
+      details: {
+        ref: String(getLocalStorageItem("recipient_id")),
+        customer_name: name,
+        delivery_address: getFullAddress(address) || "",
+        claim_method,
+        payment_method,
+        total_items: cart.total_items,
+        total_price: cart.total_amount,
+        landmark: address.landmark,
+      },
+      items: cart.cartItems,
+    });
+
+    if (createdOrder) {
+      MessengerExtensions.requestCloseBrowser(
+        function success() {
+          // webview closed
+          console.log("WEBVIEW CLOSED");
+        },
+        function error(err) {
+          // an error occurred
+          console.log("ERROR CLOSING WEBVIEW", error);
+        }
+      );
+    }
+  }
 
   const { isValid, isValidating } = useFormState({ control: form.control });
 
@@ -93,6 +129,7 @@ export default function OrderForm({}: {}) {
         </div>
         <div className="px-5 pt-2 pb-10 text-left">
           <Button
+            type="submit"
             variant={"default"}
             className={`w-full my-2 ${
               isValid && !isValidating

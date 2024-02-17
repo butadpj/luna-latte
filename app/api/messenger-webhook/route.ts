@@ -1,9 +1,7 @@
 //@ts-nocheck
 
 import { getOrderByRef, updateOrderStatus } from "@/lib/queries/orders";
-import { Message, formatDate, formatPrice, sendMessageApi } from "@/lib/utils";
-import { redirect } from "next/dist/server/api-utils";
-import { headers } from "next/headers";
+import { formatDate, formatPrice, sendMessageApi } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -117,7 +115,7 @@ export async function POST(request: Request) {
       });
     };
 
-    if (message?.text === "Can I see  your menu?") {
+    if (message?.text === "Can I see your menu?") {
       sendMenu();
     }
 

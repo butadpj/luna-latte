@@ -14,7 +14,7 @@ export default function Providers({
 
   return (
     <QueryClientProvider client={client}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <CartProvider>{children}</CartProvider>
     </QueryClientProvider>
   );

@@ -26,14 +26,7 @@ export default function Summary() {
 
   return (
     <>
-      <OrderModal
-        isOpen={showOrderForm}
-        onOpenChange={(open) => {
-          if (!open) {
-            window.location.reload();
-          } else setShowOrderForm(true);
-        }}
-      />
+      <OrderModal isOpen={showOrderForm} onOpenChange={setShowOrderForm} />
 
       <div className="w-full max-w-xl">
         <Header />

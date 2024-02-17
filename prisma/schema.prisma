@@ -61,7 +61,7 @@ model Size {
 
 model Order {
   id                 String         @id @default(uuid())
-  ref                String         @unique
+  ref                String
   created_at         DateTime       @default(now())
   updated_at         DateTime       @updatedAt
   completed_at       DateTime?

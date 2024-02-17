@@ -2,7 +2,9 @@ import { prisma } from "@/lib/db";
 import { Order, Prisma, Statuses } from "@prisma/client";
 import { getUserById } from "./users";
 import { CartItemProps } from "@/providers/CartProvider";
-import { displaySizeName } from "../utils";
+import { displaySizeName, formatPrice, sendMessageApi } from "../utils";
+import { Message } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 export async function createOrder({
   forLoggedInCustomer = false,
@@ -54,9 +56,48 @@ export async function createOrder({
           })),
         },
       },
+      include: {
+        items: true,
+      },
     });
 
-    return createdOrder;
+    if (createdOrder) {
+      const message: Message = {
+        text: `Hello ${
+          createdOrder.customer_name
+        }! Pa confirm na lang po ng order details, to proceed sa order niyo.
+
+Delivery details:
+Name: ${createdOrder.customer_name}
+Address : ${createdOrder.delivery_address}
+Nearest land mark: ${createdOrder.landmark}
+
+Orders:
+${createdOrder.items.map(
+  (item) =>
+    `- ${item.name} (${formatPrice(
+      item.price + (item.milk_additional_price || 0)
+    )} | x${item.quantity})\n`
+)}
+
+Subtotal: ${formatPrice(createdOrder.total_price)} + (Shipping Fee)
+Payment option: ${createdOrder.payment_method}
+`,
+      };
+
+      await sendMessageApi({
+        recipientId: createdOrder.ref,
+        message,
+      });
+
+      const imageUrl = `https://www.luna-latte.cafe/logo.png`;
+      const displayText = "Thank you! Stay caffeinated!";
+      redirect(
+        `https://www.messenger.com/closeWindow/?image_url=${imageUrl}&display_text=${displayText}`
+      );
+    }
+
+    throw new Error("Error on creating an order");
   } catch (error) {
     console.error(error);
     throw error;
@@ -65,7 +106,7 @@ export async function createOrder({
 
 export async function getOrderByRef(ref: string) {
   try {
-    const order = await prisma.order.findUnique({
+    const order = await prisma.order.findFirst({
       where: {
         ref,
       },
@@ -81,11 +122,11 @@ export async function getOrderByRef(ref: string) {
   }
 }
 
-export async function updateOrderStatus(orderRef: string, status: Statuses) {
+export async function updateOrderStatus(orderId: string, status: Statuses) {
   try {
     const updatedOrder = await prisma.order.update({
       where: {
-        ref: orderRef,
+        id: orderId,
       },
       data: {
         status,

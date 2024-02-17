@@ -3,10 +3,10 @@ import { Sono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
-import CartProvider from "@/providers/CartProvider";
 import { Toaster } from "@/shared/ui/toaster";
 import Providers from "@/providers/Providers";
 import GuardDialog from "@/shared/GuardDialog";
+import Script from "next/script";
 
 const sono = Sono({ subsets: ["latin"] });
 
@@ -23,10 +23,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <meta
-          name="facebook-domain-verification"
-          content="2alpwfc9ut26ahx94evdvtsz3adn4v"
-        />
+        <head>
+          <meta
+            name="facebook-domain-verification"
+            content="2alpwfc9ut26ahx94evdvtsz3adn4v"
+          />
+        </head>
+
         <body className={cn("min-h-screen antialiased", sono.className)}>
           <GuardDialog />
           <Providers>{children}</Providers>

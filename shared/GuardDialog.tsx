@@ -14,7 +14,6 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 
 export default function GuardDialog() {
   const searchParams = useSearchParams();
-  const [isClient, setIsClient] = useState(false);
 
   const [isOptInDone, setIsOptInDone] = useState(false);
   const [countDown, setCountDown] = useState(8);
@@ -22,13 +21,7 @@ export default function GuardDialog() {
   const recipient_id = searchParams.get("recipient_id");
 
   useEffect(() => {
-    if (recipient_id) {
-      setLocalStorageItem("recipient_id", recipient_id);
-    } else {
-      window.localStorage.removeItem("recipient_id");
-    }
-
-    setIsClient(true);
+    setLocalStorageItem("recipient_id", recipient_id);
   }, [recipient_id]);
 
   useEffect(() => {
@@ -81,8 +74,6 @@ export default function GuardDialog() {
       </>
     );
   };
-
-  if (!isClient) return null;
 
   return (
     <Dialog open={!getLocalStorageItem("recipient_id")} modal>
