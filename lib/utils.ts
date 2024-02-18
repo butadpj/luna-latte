@@ -6,6 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function getSiteUrl() {
+  if (process.env.VERCEL_ENV === "development") {
+    return "https://de18-136-158-11-115.ngrok-free.app";
+  }
+
+  return "https://www.luna-latte.cafe";
+}
+
 export const getLocalStorageItem = (key = "") => {
   if (key) {
     const item = window.localStorage.getItem(key);

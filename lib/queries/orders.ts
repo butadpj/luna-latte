@@ -80,7 +80,7 @@ ${createdOrder.items.map(
     )} | x${item.quantity})\n`
 )}
 
-Subtotal: ${formatPrice(createdOrder.total_price)} + (Shipping Fee)
+Subtotal: ${formatPrice(createdOrder.total_price)} \+ (Shipping Fee)
 Payment option: ${createdOrder.payment_method}
 `,
       };

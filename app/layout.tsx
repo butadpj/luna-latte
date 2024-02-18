@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/shared/ui/toaster";
 import Providers from "@/providers/Providers";
 import GuardDialog from "@/shared/GuardDialog";
-import Script from "next/script";
 
 const sono = Sono({ subsets: ["latin"] });
 

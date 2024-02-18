@@ -1,7 +1,12 @@
 //@ts-nocheck
 
 import { getOrderByRef, updateOrderStatus } from "@/lib/queries/orders";
-import { formatDate, formatPrice, sendMessageApi } from "@/lib/utils";
+import {
+  formatDate,
+  formatPrice,
+  getSiteUrl,
+  sendMessageApi,
+} from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -94,7 +99,7 @@ export async function POST(request: Request) {
               buttons: [
                 {
                   type: "web_url",
-                  url: `https://de18-136-158-11-115.ngrok-free.app/?recipient_id=${recipient.id}`,
+                  url: `${getSiteUrl()}/?recipient_id=${recipient.id}`,
                   title: "ORDER NOW",
                   webview_height_ratio: "full",
                   messenger_extensions: true,
