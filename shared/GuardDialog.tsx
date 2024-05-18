@@ -7,18 +7,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/ui/dialog";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SendToMessenger from "./SendToMessenger";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 export default function GuardDialog() {
+  const [isClient, setIsClient] = useState(false);
+
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [isOptInDone, setIsOptInDone] = useState(false);
   const [countDown, setCountDown] = useState(8);
 
   const recipient_id = searchParams.get("recipient_id");
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     setLocalStorageItem("recipient_id", recipient_id);
@@ -75,8 +82,19 @@ export default function GuardDialog() {
     );
   };
 
-  return (
-    <Dialog open={!getLocalStorageItem("recipient_id")} modal>
+  const isOpen = () => {
+    const allowedPages = ["/privacy-policy"];
+
+    if (allowedPages.includes(pathname)) {
+      return false;
+    } else {
+      const isAccessingDirectly = !getLocalStorageItem("recipient_id");
+      return isAccessingDirectly;
+    }
+  };
+
+  return isClient ? (
+    <Dialog open={isOpen()}>
       <DialogContent
         //@ts-ignore
         hideClose
@@ -85,5 +103,5 @@ export default function GuardDialog() {
         {getContent()}
       </DialogContent>
     </Dialog>
-  );
+  ) : null;
 }
