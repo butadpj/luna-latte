@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider     = "postgresql"
-  relationMode = "prisma"
   url          = env("POSTGRES_PRISMA_URL")
   directUrl    = env("POSTGRES_URL_NON_POOLING")
+  relationMode = "prisma"
 }
 
 model User {
@@ -27,11 +24,6 @@ model User {
   province      String?
   role          Role     @default(CUSTOMER)
   orders        Order[]
-}
-
-enum Role {
-  CUSTOMER
-  ADMIN
 }
 
 model Drink {
@@ -75,8 +67,8 @@ model Order {
   landmark           String?
   claim_method       ClaimMethods   @default(DELIVERY)
   payment_method     PaymentMethods @default(GCASH)
-  logged_in_customer User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id            String?
+  logged_in_customer User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   items              OrderItem[]
 
   @@index([user_id])
@@ -84,7 +76,6 @@ model Order {
 
 model OrderItem {
   id                    String  @id @default(uuid())
-  order                 Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id              String
   name                  String
   price                 Float
@@ -94,8 +85,14 @@ model OrderItem {
   milk_name             String?
   milk_additional_price Float?
   custom_request        String?
+  order                 Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
   @@index([order_id])
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
 }
 
 enum Statuses {
@@ -125,11 +122,9 @@ enum Colors {
 
 enum ClaimMethods {
   DELIVERY
-  // PICK_UP
 }
 
 enum PaymentMethods {
   GCASH
   BANK_TRANSFER
-  // COD
 }
