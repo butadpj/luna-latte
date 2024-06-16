@@ -30,7 +30,7 @@ export default function RootLayout({
         </head>
 
         <body className={cn("min-h-screen antialiased", sono.className)}>
-          <GuardDialog />
+          {/* <GuardDialog /> */}
           <Providers>{children}</Providers>
           <Toaster />
         </body>

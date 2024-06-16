@@ -14,6 +14,7 @@ module.exports = {
     "fill-LIGHT_BROWN",
     "fill-LIGHT",
     "fill-CARAMEL",
+    "fill-BEIGE",
   ],
   prefix: "",
   theme: {
